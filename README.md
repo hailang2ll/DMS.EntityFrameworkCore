@@ -1,24 +1,24 @@
 # DMS.EntityFrameworkCore
 
 
-一、基于EntityFrameworkCore框架扩展的基础组件，目前以泛型的方式实现添删改查等操作，其中包扩展分页查询，分组，排序等方法，目前还在完善中
+一、基于EntityFrameworkCore框架扩展的基础组件，目前以泛型的方式实现添删改查等操作，其中包扩展分页查询，分组，排序等方法，目前还在完善中  
 
-二、实例操作
-1、GET查询
-//FirstOrDefault查询
-var entity = service.FirstOrDefault(q => q.JobLogId == 8);
+二、实例操作  
+1、GET查询  
+//FirstOrDefault查询  
+var entity = service.FirstOrDefault(q => q.JobLogId == 8);  
 
-//First查询
-entity = service.First(q => q.JobLogId == 9);
+//First查询  
+entity = service.First(q => q.JobLogId == 9);  
 
-//数据集合
+//数据集合  
 var list = service.GetList(q => q.Message == "我是循环被修改的値");
 
-//分页
+//分页  
 var dataList = service.GetQueryable().Where(q => q.Message == "aaaa9").OrderByDescending(q => q.JobLogId).ToPageList(1, 20);
 
-2、COUNT/LongCount查询
-//COUNT查询
+2、COUNT/LongCount查询  
+//COUNT查询  
 var count = service.Count();
 count = service.Count(q => q.Message == "aaaa10");
 
