@@ -9,7 +9,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DMS.Autofac" Version="1.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="3.0.0" />
   </ItemGroup>
 
   <ItemGroup>

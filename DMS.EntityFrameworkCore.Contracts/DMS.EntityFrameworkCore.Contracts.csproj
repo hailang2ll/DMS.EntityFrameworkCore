@@ -5,12 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMS.Exceptionless" Version="1.0.0" />
+    <Folder Include="Param\" />
+    <Folder Include="Result\" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DMS.EntityFrameworkCore.Contracts\DMS.EntityFrameworkCore.Contracts.csproj" />
-    <ProjectReference Include="..\DMS.EntityFrameworkCore.Extension\DMS.EntityFrameworkCore.Extension.csproj" />
     <ProjectReference Include="..\DMS.EntityFrameworkCore.Repository\DMS.EntityFrameworkCore.Repository.csproj" />
   </ItemGroup>
 
