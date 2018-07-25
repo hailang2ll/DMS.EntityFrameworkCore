@@ -4,8 +4,8 @@
 ### 基于EntityFrameworkCore框架扩展的基础组件，目前以泛型的方式实现添删改查等操作，其中包扩展分页查询，分组，排序等方法，目前还在完善中             
            
 ### 二、实例操作             
-1、GET查询             
-//FirstOrDefault查询  
+### 1、GET查询             
+### FirstOrDefault查询  
 ```c#           
 var entity = service.FirstOrDefault(q => q.JobLogId == 8);  
 ```             
@@ -21,18 +21,18 @@ var list = service.GetList(q => q.Message == "我是循环被修改的値");
 ```c#            
 var dataList = service.GetQueryable().Where(q => q.Message == "aaaa9").OrderByDescending(q => q.JobLogId).ToPageList(1, 20);             
 ```   
-2、COUNT/LongCount查询               
-//COUNT查询   
+### 2、COUNT/LongCount查询               
+### COUNT查询   
 ```c#              
 var count = service.Count();             
 count = service.Count(q => q.Message == "aaaa10");             
 ```      
-//LongCount查询    
+### LongCount查询    
 ```c#           
 var longCount = service.LongCount();             
 longCount = service.LongCount(q => q.Message == "aaaa10");             
 ```      
-3、Insert操作             
+### 3、Insert操作             
 ### 单条数据插入 
 ```c#              
 SysJobLog sysJobLog = new SysJobLog()           
@@ -65,7 +65,7 @@ for (int i = 0; i < 100; i++)
 var intFlag = service.Insert(jobList);             
 ```                               
                                    
-4、Update操作              
+### 4、Update操作              
 ### 单条记录修改   
 ```c#            
 var entity = service.FirstOrDefault(q => q.JobLogId == 3);             
