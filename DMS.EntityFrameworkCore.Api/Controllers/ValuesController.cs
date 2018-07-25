@@ -16,13 +16,22 @@ using Microsoft.AspNetCore.Mvc;
  */
 namespace DMS.EntityFrameworkCore.Api.Controllers
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        /// <summary>
+        /// 
+        /// </summary>
         public SysJobLogService service = new SysJobLogService();
 
-        // GET api/values
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <returns></returns>
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
@@ -30,7 +39,11 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/values/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet("{id}")]
         public ActionResult<string> Get(int id)
         {
@@ -38,18 +51,31 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         }
 
         // POST api/values
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="value"></param>
         [HttpPost]
         public void Post([FromBody] string value)
         {
         }
 
         // PUT api/values/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="value"></param>
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
         }
 
         // DELETE api/values/5
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete("{id}")]
         public void Delete(int id)
         {

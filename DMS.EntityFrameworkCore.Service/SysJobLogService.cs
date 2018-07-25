@@ -77,7 +77,7 @@ namespace DMS.EntityFrameworkCore.Service
 
             LessLog.Info("我是一条测试日志");
 
-            var json = EnumStatusFlag.Locking.ToJson();
+            var json =typeof(EnumMemUserType).ToJson();
 
             var des = EnumMemUserType.QQType.GetDescription();
 
