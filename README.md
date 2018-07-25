@@ -29,14 +29,14 @@ longCount = service.LongCount(q => q.Message == "aaaa10");
 3、Insert操作             
 //单条数据插入             
 SysJobLog sysJobLog = new SysJobLog()           
-   {           
-      JobLogType = 1,             
-      Message = "aaaa" + i,             
-      Name = "a",             
-      ServerIp = "127.0.0.1",             
-      TaskLogType = 1,             
-      CreateTime = DateTime.Now,             
-    };             
+	{           
+	JobLogType = 1,             
+	Message = "aaaa" + i,             
+	Name = "a",             
+	ServerIp = "127.0.0.1",             
+	TaskLogType = 1,             
+	CreateTime = DateTime.Now,             
+	};             
 var intFlag = service.Insert(sysJobLog);             
              
 //批量数据插入               
