@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DMS.EntityFrameworkCore.Extension\DMS.EntityFrameworkCore.Extension.csproj" />
+    <ProjectReference Include="..\DMS.EntityFrameworkCore.Repository\DMS.EntityFrameworkCore.Repository.csproj" />
+  </ItemGroup>
+
+</Project>
