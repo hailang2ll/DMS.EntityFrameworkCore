@@ -65,7 +65,7 @@ namespace DMS.EntityFrameworkCore.Service
 
 
 
-    public class SysJobLogService :  ServiceBase<SysJobLog>, IDemoService
+    public class SysJobLogService :  ServiceBase, IDemoService
     {
         public SysJobLogService() : base(new WALIUJR_SYSContext())
         { }
@@ -73,14 +73,11 @@ namespace DMS.EntityFrameworkCore.Service
 
         public SysJobLog GetEntity(int id)
         {
-            SysJobLog entity = this.FirstOrDefault(q => q.JobLogId == 13);
-
+            SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 13);
             LessLog.Info("我是一条测试日志");
 
             var json =typeof(EnumMemUserType).ToJson();
-
             var des = EnumMemUserType.QQType.GetDescription();
-
             return entity;
         }
     }
