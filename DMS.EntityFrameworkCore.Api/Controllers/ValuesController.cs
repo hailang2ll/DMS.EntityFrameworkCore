@@ -19,7 +19,7 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
     /// <summary>
     /// 
     /// </summary>
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
@@ -28,14 +28,29 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         /// </summary>
         public SysJobLogService service = new SysJobLogService();
 
-       /// <summary>
-       /// 
-       /// </summary>
-       /// <returns></returns>
+        /// <summary>
+        /// 同步示例接口
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            service.GetEntity(1);
+            var entity1 = service.GetEntity(13);
+            var isSuccess = service.Add();
+            var pageList = service.GetPageList(1, 15, string.Empty);
+            return new string[] { "value1", "value2" };
+        }
+
+        /// <summary>
+        /// 异步示例接口
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<string>>> GetAsync()
+        {
+            var entity1 = await service.GetEntityAsync(13);
+            var isSuccess = await service.AddAsync();
+            var pageList = await service.GetPageListAsync(1, 15, string.Empty);
             return new string[] { "value1", "value2" };
         }
 

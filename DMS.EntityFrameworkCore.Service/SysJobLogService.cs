@@ -1,9 +1,14 @@
-﻿using DMS.BaseFramework.Common.Extension;
+﻿using DMS.BaseFramework.Common.BaseResult;
+using DMS.BaseFramework.Common.Extension;
 using DMS.EntityFrameworkCore.Contracts;
 using DMS.EntityFrameworkCore.Extension;
 using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.Exceptionless;
+using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace DMS.EntityFrameworkCore.Service
 {
@@ -63,22 +68,190 @@ namespace DMS.EntityFrameworkCore.Service
         public const int Locking = 6;
     }
 
-
-
-    public class SysJobLogService :  ServiceBase, IDemoService
+    /// <summary>
+    /// 
+    /// </summary>
+    public class SysJobLogService : ServiceBase, IDemoService
     {
-        public SysJobLogService() : base(new WALIUJR_SYSContext())
-        { }
+        /// <summary>
+        /// 
+        /// </summary>
+        public SysJobLogService()
+            : base(new WALIUJR_SYSContext()) { }
 
+        /// <summary>
+        /// 同步插入
+        /// </summary>
+        /// <returns></returns>
+        public ResponseResult Add()
+        {
+            ResponseResult result = new ResponseResult();
+            SysJobLog jobLogEntity = new SysJobLog()
+            {
+                Name = "测试",
+                JobLogType = 1,
+                ServerIp = "::",
+                TaskLogType = 1,
+                Message = "测试消息",
+                CreateTime = DateTime.Now
+            };
 
+            SysLog jobEntity = new SysLog()
+            {
+                Logger = "测试数据",
+                Level = "测试等级",
+                Ip = "::",
+                DeleteFlag = false,
+                LogType = 1,
+                Message = "测试数据",
+                SubSysId = 1,
+                SubSysName = "测试子名称",
+                Thread = "测试数据",
+                Url = "http://www.jinglih.com/",
+                MemberName = "17623827239",
+                CreateTime = DateTime.Now,
+                Exception = "测试异常信息"
+            };
+
+            //常规的写法
+            using (TransactionScope scope = new TransactionScope())
+            {
+                Insert(jobEntity);
+                Insert(jobLogEntity);
+
+                //锁表查询测试
+                SysLog logEntity = FirstOrDefault<SysLog>(q => q.LogId == 86);
+                SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 13);
+
+                scope.Complete();//提交事务
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 异步插入
+        /// </summary>
+        /// <returns></returns>
+        public async Task<ResponseResult> AddAsync()
+        {
+            ResponseResult result = new ResponseResult();
+            SysJobLog jobLogEntity = new SysJobLog()
+            {
+                Name = "测试",
+                JobLogType = 1,
+                ServerIp = "::",
+                TaskLogType = 1,
+                Message = "测试消息",
+                CreateTime = DateTime.Now
+            };
+
+            SysLog jobEntity = new SysLog()
+            {
+                Logger = "测试数据",
+                Level = "测试等级",
+                Ip = "::",
+                DeleteFlag = false,
+                LogType = 1,
+                Message = "测试数据",
+                SubSysId = 1,
+                SubSysName = "测试子名称",
+                Thread = "测试数据",
+                Url = "http://www.jinglih.com/",
+                MemberName = "17623827239",
+                CreateTime = DateTime.Now,
+                Exception = "测试异常信息"
+            };
+
+            ////常规的写法
+            using (TransactionScope scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))
+            {
+                //执行action
+                await InsertAsync(jobEntity);
+                await InsertAsync(jobLogEntity);
+
+                //锁表查询测试
+                SysLog logEntity = await FirstOrDefaultAsync<SysLog>(q => q.LogId == 86);
+                SysJobLog entity = await FirstOrDefaultAsync<SysJobLog>(q => q.JobLogId == 13);
+
+                //提交事务
+                scope.Complete();
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 同步查询示例
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public SysJobLog GetEntity(int id)
         {
             SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 13);
             LessLog.Info("我是一条测试日志");
 
-            var json =typeof(EnumMemUserType).ToJson();
+            var json = typeof(EnumMemUserType).ToJson();
             var des = EnumMemUserType.QQType.GetDescription();
             return entity;
+        }
+
+        /// <summary>
+        /// 异步查询示例
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<SysJobLog> GetEntityAsync(int id)
+        {
+            return await FirstOrDefaultAsync<SysJobLog>(q => q.JobLogId == 13);
+        }
+
+        /// <summary>
+        /// 同步执行分页查询示例
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="searchText"></param>
+        /// <returns></returns>
+        public ResponsePageResult<SysJobLog> GetPageList(int pageIndex, int pageSize, string searchText)
+        {
+            ResponsePageResult<SysJobLog> result = new ResponsePageResult<SysJobLog>() { data = new DataResultList<SysJobLog>() };
+            IQueryable<SysJobLog> queryList = GetQueryable<SysJobLog>();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                queryList = queryList.Where(q => q.Message.Contains(searchText));
+            }
+
+            //执行分页查询
+            result.data = queryList
+                .OrderBy(q => q.CreateTime)
+                .ThenBy(q => q.JobLogId)
+                .ToPageList(pageIndex, pageSize);
+
+            return result;
+        }
+
+        /// <summary>
+        /// 异步执行分页查询示例
+        /// </summary>
+        /// <param name="pageIndex"></param>
+        /// <param name="pageSize"></param>
+        /// <param name="searchText"></param>
+        /// <returns></returns>
+        public async Task<ResponsePageResult<SysJobLog>> GetPageListAsync(int pageIndex, int pageSize, string searchText)
+        {
+            ResponsePageResult<SysJobLog> result = new ResponsePageResult<SysJobLog>() { data = new DataResultList<SysJobLog>() };
+            IQueryable<SysJobLog> queryList = GetQueryable<SysJobLog>();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                queryList = queryList.Where(q => q.Message.Contains(searchText));
+            }
+
+            //执行分页查询
+            result.data = await queryList
+                .OrderBy(q => q.CreateTime)
+                .ThenBy(q => q.JobLogId)
+                .ToPageListAsync(pageIndex, pageSize);
+
+            return result;
         }
     }
 }

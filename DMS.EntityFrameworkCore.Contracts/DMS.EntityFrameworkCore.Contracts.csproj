@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\DMS.EntityFrameworkCore.Repository\DMS.EntityFrameworkCore.Repository.csproj" />
   </ItemGroup>
 
