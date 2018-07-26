@@ -3,18 +3,25 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Threading.Tasks;
+using System.Transactions;
 
 namespace DMS.EntityFrameworkCore.Extension
 {
     /// <summary>
-    /// 
+    /// 服务基类实现
     /// </summary>
     public class ServiceBase : IServiceBase
     {
         /// <summary>
-        /// 
+        /// 数据库上下文
         /// </summary>
         private DbContext _context;
+
+        /// <summary>
+        /// 数据库上下文
+        /// </summary>
+        public DbContext DbContext { get { return _context; } }
 
         /// <summary>
         /// 
@@ -25,17 +32,7 @@ namespace DMS.EntityFrameworkCore.Extension
             _context = context;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public DbContext DbContext
-        {
-            get
-            {
-                return _context;
-            }
-        }
-
+        #region 同步
         #region Get操作
         /// <summary>
         /// 获取第一条数据
@@ -308,14 +305,299 @@ namespace DMS.EntityFrameworkCore.Extension
             return _context.Set<T>().LongCount();
         }
         #endregion
+        #endregion
+
+        #region 异步
+        #region Get操作
+        /// <summary>
+        /// 获取第一条数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<T> FirstOrDefaultAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate != null)
+            {
+                return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+            }
+            return await _context.Set<T>().FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// 获取第一条数据
+        /// 备注：如果查询的数据结果为null则直接报错
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public async Task<T> FirstAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate != null)
+            {
+                try
+                {
+                    return await _context.Set<T>().FirstAsync(predicate);
+                }
+                catch
+                {
+                    return default(T);
+                }
+            }
+            return await _context.Set<T>().FirstAsync();
+        }
+
+        /// <summary>
+        /// 根据查询表达式异步获取列表
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate == null)
+            {
+                return await _context.Set<T>().AsNoTracking().ToListAsync();
+            }
+            else
+            {
+                return await _context.Set<T>().Where(predicate).ToListAsync();
+            }
+        }
+        #endregion
+
+        #region 根据主键获取实体
+        /// <summary>
+        /// 更具表的主键获取对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> GetByKeyAsync<T>(int id) where T : class
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
         /// <summary>
         /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> GetByKeyAsync<T>(long id) where T : class
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> GetByKeyAsync<T>(Guid id) where T : class
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TKeyType"></typeparam>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public async Task<T> GetByKeyAsync<T, TKeyType>(TKeyType id) where T : class
+        {
+            return await _context.Set<T>().FindAsync(id);
+        }
+        #endregion
+
+        #region 新增实体
+        /// <summary>
+        /// 添加实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<long> InsertAsync<T>(T entity) where T : class
+        {
+            if (entity != null)
+            {
+                return await _context.InsertAsync(entity);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 批量添加实体
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<long> InsertAsync<T>(List<T> entities) where T : class
+        {
+            if (entities != null && entities.Count > 0)
+            {
+                return await _context.InsertAsync<T>(entities);
+            }
+            return 0;
+        }
+        #endregion
+
+        #region 删除实体
+        /// <summary>
+        /// 删除一个实体
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<long> DeleteAsync<T>(T entity) where T : class
+        {
+            if (entity != null)
+            {
+                return await _context.DeleteAsync(entity);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<long> DeleteAsync<T>(List<T> entities) where T : class
+        {
+            if (entities != null && entities.Count > 0)
+            {
+                return await _context.DeleteAsync(entities);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 根据主键删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task<long> DeleteAsync<T>(int key) where T : class
+        {
+            T entity = await GetByKeyAsync<T>(key);
+            if (entity != null)
+            {
+                return await DeleteAsync(entity);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 根据主键删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public async Task<long> DeleteAsync<T>(Guid key) where T : class
+        {
+            T entity = await GetByKeyAsync<T>(key);
+            if (entity != null)
+            {
+                return await DeleteAsync(entity);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 根据条件表达式删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<long> DeleteAsync<T>(Expression<Func<T, bool>> predicate) where T : class
+        {
+            return await _context.DeleteAsync(predicate);
+        }
+        #endregion
+
+        #region 修改实体
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        public async Task<long> UpdateAsync<T>(T entity) where T : class
+        {
+            if (entity != null)
+            {
+                return await _context.ModifiyAsync(entity);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        public async Task<long> UpdateAsync<T>(List<T> entities) where T : class
+        {
+            if (entities != null && entities.Count > 0)
+            {
+                return await _context.ModifiyAsync<T>(entities);
+            }
+            return 0;
+        }
+
+        /// <summary>
+        /// 目前还不支持
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <param name="updateExpression"></param>
+        /// <returns></returns>
+        public async Task<long> UpdateAsync<T>(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class
+        {
+            return await _context.ModifiyAsync(predicate, updateExpression);
+        }
+        #endregion
+
+        #region Count
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<int> CountAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate != null)
+            {
+                return await _context.Set<T>().CountAsync(predicate);
+            }
+            return await _context.Set<T>().CountAsync();
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<long> LongCountAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate != null)
+            {
+                return await _context.Set<T>().LongCountAsync(predicate);
+            }
+            return await _context.Set<T>().LongCountAsync();
+        }
+        #endregion
+        #endregion
+
+        /// <summary>
+        /// 获取查询构造器
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
         public IQueryable<T> GetQueryable<T>() where T : class
         {
-            return DbContext.Set<T>().AsQueryable();
+            return _context.Set<T>().AsQueryable();
         }
 
         /// <summary>
