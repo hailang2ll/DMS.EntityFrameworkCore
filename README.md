@@ -1,7 +1,7 @@
 ## DMS.EntityFrameworkCore           
            
            
-### 基于EntityFrameworkCore框架扩展的基础组件，目前以泛型的方式实现添删改查等操作，其中包扩展分页查询，分组，排序等方法，目前还在完善中             
+### 基于EntityFrameworkCore框架扩展的基础组件，依赖DMS中基础框架，目前以泛型的方式实现添删改查，支持同步与异步操作，支持复杂的查询，Lambda表达式动态查询            
            
 ### 实例操作             
 ### 1、GET查询             
