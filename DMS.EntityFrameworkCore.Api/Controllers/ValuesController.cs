@@ -35,9 +35,11 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            var entity1 = service.GetEntity(13);
-            var isSuccess = service.Add();
-            var pageList = service.GetPageList(1, 15, string.Empty);
+            //var entity1 = service.GetEntity(13);
+            //var isSuccess = service.Add();
+            //var pageList = service.GetPageList(1, 15, string.Empty);
+
+            var list = service.GetList("我是","b");
             return new string[] { "value1", "value2" };
         }
 

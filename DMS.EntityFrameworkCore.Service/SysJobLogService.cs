@@ -5,6 +5,7 @@ using DMS.EntityFrameworkCore.Extension;
 using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.Exceptionless;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -203,6 +204,23 @@ namespace DMS.EntityFrameworkCore.Service
         {
             return await FirstOrDefaultAsync<SysJobLog>(q => q.JobLogId == 13);
         }
+
+        public List<SysJobLog> GetList(string searchText,string searchText2)
+        {
+            IQueryable<SysJobLog> queryList = GetQueryable<SysJobLog>();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                queryList = queryList.Where(q => q.Message.Contains(searchText));
+            }
+            if (!string.IsNullOrEmpty(searchText2))
+            {
+                queryList = queryList.Where(q => q.Name.Contains(searchText2));
+            }
+            var list = queryList.ToList();
+            return list;
+        }
+
+     
 
         /// <summary>
         /// 同步执行分页查询示例
