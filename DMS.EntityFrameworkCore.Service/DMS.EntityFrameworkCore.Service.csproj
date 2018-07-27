@@ -5,7 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.1" />
     <PackageReference Include="DMS.Exceptionless" Version="1.0.0" />
   </ItemGroup>
 

@@ -39,7 +39,7 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
             //var isSuccess = service.Add();
             //var pageList = service.GetPageList(1, 15, string.Empty);
 
-            var list = service.GetList("我是","b");
+            var list = service.GetListExt("我是","b");
             return new string[] { "value1", "value2" };
         }
 

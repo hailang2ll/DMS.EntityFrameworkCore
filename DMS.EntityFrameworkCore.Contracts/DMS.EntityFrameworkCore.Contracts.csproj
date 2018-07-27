@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.1" />
+    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.2.1" />
   </ItemGroup>
 
   <ItemGroup>

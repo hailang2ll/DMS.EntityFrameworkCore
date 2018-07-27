@@ -1,13 +1,16 @@
 ﻿using DMS.BaseFramework.Common.BaseResult;
 using DMS.BaseFramework.Common.Extension;
+using DMS.BaseFramework.Common.Extension.ExpressionFunc;
 using DMS.EntityFrameworkCore.Contracts;
 using DMS.EntityFrameworkCore.Extension;
 using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.Exceptionless;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Transactions;
 
@@ -205,7 +208,36 @@ namespace DMS.EntityFrameworkCore.Service
             return await FirstOrDefaultAsync<SysJobLog>(q => q.JobLogId == 13);
         }
 
-        public List<SysJobLog> GetList(string searchText,string searchText2)
+        /// <summary>
+        /// 第一种方法，同步
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="searchText2"></param>
+        /// <returns></returns>
+        public List<SysJobLog> GetList(string searchText, string searchText2)
+        {
+            IQueryable<SysJobLog> queryList = GetQueryable<SysJobLog>();
+            if (!string.IsNullOrEmpty(searchText))
+            {
+                queryList = queryList.Where(q => q.Message.Equals(searchText));
+            }
+            if (!string.IsNullOrEmpty(searchText2))
+            {
+                queryList = queryList.Where(q => q.Name.Equals(searchText2));
+            }
+            var list = queryList.ToList();
+
+            return list;
+        }
+
+
+        /// <summary>
+        /// 第一种方法，异步
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="searchText2"></param>
+        /// <returns></returns>
+        public async Task<List<SysJobLog>> GetListAsync(string searchText, string searchText2)
         {
             IQueryable<SysJobLog> queryList = GetQueryable<SysJobLog>();
             if (!string.IsNullOrEmpty(searchText))
@@ -216,11 +248,56 @@ namespace DMS.EntityFrameworkCore.Service
             {
                 queryList = queryList.Where(q => q.Name.Contains(searchText2));
             }
-            var list = queryList.ToList();
+            var list = await queryList.ToListAsync();
             return list;
         }
 
-     
+        /// <summary>
+        /// 第二种方同步，扩展表达式
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="searchText2"></param>
+        /// <returns></returns>
+        public List<SysJobLog> GetListExt(string searchText, string searchText2)
+        {
+            Expression<Func<SysJobLog, bool>> express = q => q.JobLogType == 1;
+            express = express.And(q => q.TaskLogType == 1);
+            if (!searchText.IsNullOrEmpty())
+            {
+                express = express.And(c => c.Message.Contains(searchText));
+            }
+            if (!searchText2.IsNullOrEmpty())
+            {
+                express = express.And(c => c.Name.Contains(searchText2));
+            }
+
+            var list = this.GetList(express);
+            return list;
+        }
+
+        /// <summary>
+        /// 第二种方法异步，扩展表达式
+        /// </summary>
+        /// <param name="searchText"></param>
+        /// <param name="searchText2"></param>
+        /// <returns></returns>
+        public async Task<List<SysJobLog>> GetListExtAsync(string searchText, string searchText2)
+        {
+            Expression<Func<SysJobLog, bool>> express = q => q.JobLogType == 1;
+            express = express.And(q => q.TaskLogType == 1);
+            if (!searchText.IsNullOrEmpty())
+            {
+                express = express.And(c => c.Message.Equals(searchText));
+            }
+            if (!searchText2.IsNullOrEmpty())
+            {
+                express = express.And(c => c.Name.Equals(searchText2));
+            }
+
+            var list = await this.GetListAsync(express);
+            return list;
+        }
+
 
         /// <summary>
         /// 同步执行分页查询示例

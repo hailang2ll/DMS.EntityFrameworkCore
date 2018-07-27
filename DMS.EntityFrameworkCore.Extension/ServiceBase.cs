@@ -86,6 +86,7 @@ namespace DMS.EntityFrameworkCore.Extension
                 return _context.Set<T>().Where(predicate).ToList();
             }
         }
+
         #endregion
 
         #region 根据主键获取实体

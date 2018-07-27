@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.1" />
+    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.2.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
   </ItemGroup>
 
