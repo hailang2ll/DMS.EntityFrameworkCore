@@ -1,5 +1,6 @@
 ﻿using DMS.BaseFramework.Common.BaseResult;
 using DMS.EntityFrameworkCore.Repository.Models;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DMS.EntityFrameworkCore.Contracts
@@ -34,6 +35,11 @@ namespace DMS.EntityFrameworkCore.Contracts
         /// <param name="id"></param>
         /// <returns></returns>
         Task<SysJobLog> GetEntityAsync(int id);
+
+        List<SysJobLog> GetList(string searchText, string searchText2);
+        Task<List<SysJobLog>> GetListAsync(string searchText, string searchText2);
+        List<SysJobLog> GetListExt(string searchText, string searchText2);
+        Task<List<SysJobLog>> GetListExtAsync(string searchText, string searchText2)
 
         /// <summary>
         /// 同步分页查询示例
