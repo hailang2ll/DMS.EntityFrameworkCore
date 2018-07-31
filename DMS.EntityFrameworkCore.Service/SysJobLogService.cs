@@ -184,6 +184,18 @@ namespace DMS.EntityFrameworkCore.Service
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+        //public long Update()
+        //{
+        //    var result = Update<SysJobLog>(q => new SysJobLog() { Message = "修改Mess", Name = "修改的信息" }, q => q.JobLogId == 4 );
+        //    return result;
+        //}
+
+
+        #region 所有查询
+        /// <summary>
         /// 同步查询示例
         /// </summary>
         /// <param name="id"></param>
@@ -348,5 +360,6 @@ namespace DMS.EntityFrameworkCore.Service
 
             return result;
         }
+        #endregion
     }
 }

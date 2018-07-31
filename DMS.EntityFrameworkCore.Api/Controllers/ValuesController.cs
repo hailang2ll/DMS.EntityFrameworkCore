@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DMS.EntityFrameworkCore.Contracts;
+using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.EntityFrameworkCore.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -26,7 +28,7 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         /// <summary>
         /// 
         /// </summary>
-        public SysJobLogService service = new SysJobLogService();
+        public IDemoService service { get; set; }
 
         /// <summary>
         /// 同步示例接口
@@ -35,11 +37,13 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<string>> Get()
         {
-            //var entity1 = service.GetEntity(13);
+            var entity1 = service.GetEntity(13);
             //var isSuccess = service.Add();
             //var pageList = service.GetPageList(1, 15, string.Empty);
 
-            var list = service.GetListExt("我是","b");
+            //var list = service.GetListExt("我是","b");
+
+            //Update<Partner>(m => new Partner { AgentUserId = newAgentUserId }, m => m.AgentUserId == oldAgentUserId);
             return new string[] { "value1", "value2" };
         }
 

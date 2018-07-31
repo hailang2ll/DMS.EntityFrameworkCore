@@ -32,7 +32,7 @@ namespace DMS.EntityFrameworkCore.Extension
 
         int Update<T>(T entity) where T : class;
         int Update<T>(List<T> entities) where T : class;
-        int Update<T>(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class;
+        int Update<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class;
 
         int Count<T>(Expression<Func<T, bool>> predicate = null) where T : class;
         long LongCount<T>(Expression<Func<T, bool>> predicate = null) where T : class;
@@ -59,7 +59,7 @@ namespace DMS.EntityFrameworkCore.Extension
 
         Task<long> UpdateAsync<T>(T entity) where T : class;
         Task<long> UpdateAsync<T>(List<T> entities) where T : class;
-        Task<long> UpdateAsync<T>(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class;
+        Task<long> UpdateAsync<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class;
 
         Task<int> CountAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
         Task<long> LongCountAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;

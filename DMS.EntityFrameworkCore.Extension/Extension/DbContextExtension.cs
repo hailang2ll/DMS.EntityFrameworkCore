@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DMS.EntityFrameworkCore.Extension
@@ -139,13 +140,19 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
         /// <returns></returns>
-        public static int Modifiy<T>(this DbContext context, Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class
+        public static int Modifiy<T>(this DbContext context, Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
         {
-            int rows = 0;
-            IQueryable<T> entry = context.Set<T>().Where(predicate);
+
+
+            //DmlExpressionParser<T> updateExpressionParser = new UpdateExpressionParser<T>(context.Database.ProviderName, set, where);
+            //string script = updateExpressionParser.GetDmlCommand();
+            //rows = context.Database.ExecuteSqlCommand(script);
+            //return rows;
+
+            //IQueryable<T> entry = context.Set<T>().Where(where);
             //IQueryable<T> entry = (predicate == null) ? context.Set<T>().AsQueryable() : context.Set<T>().Where(predicate);
             //string propertyName = "";
-            //var memberInitExpression = updateExpression.Body as MemberInitExpression;
+            //var memberInitExpression = set.Body as MemberInitExpression;
             //foreach (MemberBinding binding in memberInitExpression.Bindings)
             //{
             //    propertyName = binding.Member.Name;
@@ -170,6 +177,51 @@ namespace DMS.EntityFrameworkCore.Extension
             //    }
             //}
 
+
+
+            //MemberInitExpression initExpression = set.Body as MemberInitExpression;
+            //if (initExpression != null)
+            //{
+            //    Type type = typeof(T);
+
+            //    List<MemberAssignment> memberAssignments = (from m in initExpression.Bindings.OfType<MemberAssignment>() select m).ToList();
+
+            //    StringBuilder sb = new StringBuilder();
+            //    sb.Append("UPDATE ");
+            //    sb.Append(type.Name);
+            //    sb.Append("SET ");
+            //    foreach (var item in memberAssignments)
+            //    {
+            //        sb.Append(item.ToString().Replace("\"", "'"));
+            //        sb.Append(" , ");
+            //    }
+            //    //context.Database.ExecuteSqlCommand("");
+            //    //var result = (from m in initExpression.Bindings.OfType<MemberAssignment>()
+            //    //              select new { PropertyName = m.Member.Name }).ToList();
+            //    //var map = MetadataAccessor.GetTableNameByEdmType<T>(containerName);
+
+            //    //StringBuilder sb = new StringBuilder();
+            //    //sb.Append("SET ").
+            //    //Append(map[result[0].PropertyName])
+            //    //.Append("=")
+            //    //.Append(result[0].Value.Replace("\"", "'"));
+
+            //    //for (int i = 1; i < result.Count; i++)
+            //    //{
+            //    //    sb.Append(",");
+            //    //    sb.Append(map[result[i].PropertyName]);//MetadataAccessor.GetColumnNameByEdmProperty<T>(result[i].PropertyName));
+            //    //    sb.Append("=");
+            //    //    sb.Append(result[i].Value.Replace("\"", "'"));
+            //    //}
+            //}
+
+
+
+
+
+
+            int rows = 0;
+            IQueryable<T> entry = context.Set<T>().Where(where);
             List<T> list = entry.ToList();
             if (list.Count > 0)
             {
@@ -326,10 +378,11 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
         /// <returns></returns>
-        public static async Task<int> ModifiyAsync<T>(this DbContext context, Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class
+        public static async Task<int> ModifiyAsync<T>(this DbContext context, Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
         {
             int rows = 0;
-            IQueryable<T> entry = context.Set<T>().Where(predicate);
+
+            IQueryable<T> entry = context.Set<T>().Where(where);
             List<T> list = await entry.ToListAsync();
             if (list.Count > 0)
             {

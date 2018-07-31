@@ -268,9 +268,9 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
         /// <returns></returns>
-        public int Update<T>(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class
+        public int Update<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
         {
-            return _context.Modifiy(predicate, updateExpression);
+            return _context.Modifiy(set, where);
         }
         #endregion
 
@@ -552,9 +552,9 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
         /// <returns></returns>
-        public async Task<long> UpdateAsync<T>(Expression<Func<T, bool>> predicate, Expression<Func<T, T>> updateExpression) where T : class
+        public async Task<long> UpdateAsync<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
         {
-            return await _context.ModifiyAsync(predicate, updateExpression);
+            return await _context.ModifiyAsync(set, where);
         }
         #endregion
 

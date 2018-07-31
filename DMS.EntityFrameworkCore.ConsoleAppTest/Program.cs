@@ -121,7 +121,7 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
             #endregion
 
             #region 修改3，目前还不支持
-            intFlag = service.Update<SysJobLog>(q => q.Message == "aaaa1" && q.JobLogType == 1, o => new SysJobLog() { Message = "这是lambda修改" });
+            intFlag = service.Update<SysJobLog>(o => new SysJobLog() { Message = "这是lambda修改" }, q => q.Message == "aaaa1" && q.JobLogType == 1);
             Console.WriteLine("表达式修改状态：" + intFlag);
             #endregion
 
