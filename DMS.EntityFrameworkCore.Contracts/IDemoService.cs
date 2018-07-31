@@ -39,7 +39,7 @@ namespace DMS.EntityFrameworkCore.Contracts
         List<SysJobLog> GetList(string searchText, string searchText2);
         Task<List<SysJobLog>> GetListAsync(string searchText, string searchText2);
         List<SysJobLog> GetListExt(string searchText, string searchText2);
-        Task<List<SysJobLog>> GetListExtAsync(string searchText, string searchText2)
+        Task<List<SysJobLog>> GetListExtAsync(string searchText, string searchText2);
 
         /// <summary>
         /// 同步分页查询示例
