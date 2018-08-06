@@ -68,7 +68,8 @@ namespace DMS.EntityFrameworkCore.Api
             #endregion
 
             //向容器内注入数据库
-            //var connectionStrings = Configuration.GetConnectionString("MYSQLWALIUJR_SYS");            //services.AddDbContext<WALIUJR_SYSContext>(options => options.UseSqlServer(connectionStrings));
+            //var connectionStrings = Configuration.GetConnectionString("MYSQLWALIUJR_SYS");
+            //services.AddDbContext<WALIUJR_SYSContext>(options => options.UseSqlServer(connectionStrings));
 
             #region Autofac DI注入 第一种
             //说明：ConfigureServices返回void，通过构造函数来获取
