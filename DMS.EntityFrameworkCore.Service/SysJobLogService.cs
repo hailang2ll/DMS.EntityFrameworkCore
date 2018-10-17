@@ -117,6 +117,28 @@ namespace DMS.EntityFrameworkCore.Service
                 Exception = "测试异常信息"
             };
 
+            //Mysql常规的写法，可以统一
+            //using (var transaction = DbContext.Database.BeginTransaction())
+            //{
+            //    try
+
+            //    {
+            //        Insert(jobLogEntity);
+            //        Insert(jobEntity);
+
+
+            //        //如果未执行到Commit()就执行失败遇到异常了，EF Core会自动进行数据回滚（前提是使用Using） 
+            //        transaction.Commit();
+            //    }
+            //    catch (Exception ex)
+            //    {
+            //        // TODO: Handle failure return ex.Message; 
+            //        //transaction.Rollback();
+            //    }
+            //}
+
+
+
             //常规的写法
             using (TransactionScope scope = new TransactionScope())
             {
@@ -202,7 +224,7 @@ namespace DMS.EntityFrameworkCore.Service
         /// <returns></returns>
         public SysJobLog GetEntity(int id)
         {
-            SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 13);
+            SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 2);
             LessLog.Info("我是一条测试日志");
 
             var json = typeof(EnumMemUserType).ToJson();

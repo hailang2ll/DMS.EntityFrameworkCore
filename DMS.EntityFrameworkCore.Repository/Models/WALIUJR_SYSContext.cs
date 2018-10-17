@@ -34,7 +34,8 @@ namespace DMS.EntityFrameworkCore.Repository.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Integrated Security=False;server=192.168.0.100;database=WALIUJR_SYS;User ID=sa;Password=SA-jinglih;Connect Timeout=30");
+                //optionsBuilder.UseSqlServer("Integrated Security=False;server=192.168.0.100;database=WALIUJR_SYS;User ID=sa;Password=SA-jinglih;Connect Timeout=30");
+                optionsBuilder.UseMySql("server=192.168.0.179;user=root; password=Cst-88888; database=waliujr_sys");
             }
         }
 
