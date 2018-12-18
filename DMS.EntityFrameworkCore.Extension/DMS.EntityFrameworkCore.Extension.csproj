@@ -1,16 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
     <Description>基于Microsoft.EntityFrameworkCore.SqlServer框架开发，依赖DMS中基础框架，主要用于EFCore增删改查，以及批量操作，以及复杂的扩展查询</Description>
     <Authors>Dylan,hailang</Authors>
     <Company>Dylan,hailang</Company>
     <Copyright>Copyright@2018 Dylan</Copyright>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.2.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.1.0" />
+    <PackageReference Include="DMS.BaseFramework.Common" Version="1.0.3.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">

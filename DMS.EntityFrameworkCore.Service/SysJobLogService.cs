@@ -227,7 +227,7 @@ namespace DMS.EntityFrameworkCore.Service
             SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 2);
             LessLog.Info("我是一条测试日志");
 
-            var json = typeof(EnumMemUserType).ToJson();
+            var json = typeof(EnumMemUserType).ToJsonByEnum();
             var des = EnumMemUserType.QQType.GetDescription();
             return entity;
         }
@@ -348,7 +348,6 @@ namespace DMS.EntityFrameworkCore.Service
             {
                 queryList = queryList.Where(q => q.Message.Contains(searchText));
             }
-
             //执行分页查询
             result.data = queryList
                 .OrderBy(q => q.CreateTime)
