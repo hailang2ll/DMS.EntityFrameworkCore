@@ -1,4 +1,6 @@
-﻿using DMS.EntityFrameworkCore.Extension;
+﻿using DMS.BaseFramework.Common.BaseResult;
+using DMS.EntityFrameworkCore.Extension;
+using DMS.EntityFrameworkCore.Repository.MemberModels;
 using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.EntityFrameworkCore.Service;
 using System;
@@ -11,12 +13,13 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
     {
         static int intFlag = 0;
         static SysJobLogService service = new SysJobLogService();
+        static MemberService memservice = new MemberService();
 
         static void Main(string[] args)
         {
-            //Get();
+            Get();
             //Count();
-            Insert();
+            //Insert();
             //Update();
             //Delete();
 
@@ -27,20 +30,27 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
 
         static void Get()
         {
-            var entity = service.FirstOrDefault<SysJobLog>(q => q.JobLogId == 8);
-            if (entity == null)
-            {
-                Console.WriteLine("实体为空");
-            }
-            else
-            {
-                Console.WriteLine("查询一个实体：" + entity.Message);
-            }
+            //var entity = service.FirstOrDefault<SysJobLog>(q => q.JobLogId == 8);
+            //if (entity == null)
+            //{
+            //    Console.WriteLine("实体为空");
+            //}
+            //else
+            //{
+            //    Console.WriteLine("查询一个实体：" + entity.Message);
+            //}
 
-            entity = service.First<SysJobLog>(q => q.JobLogId == 9);
-            var list = service.GetList<SysJobLog>(q => q.Message == "我是循环被修改的値");
+            //entity = service.First<SysJobLog>(q => q.JobLogId == 9);
+            //var list = service.GetList<SysJobLog>(q => q.Message == "我是循环被修改的値");
 
-            var dataList = service.GetQueryable<SysJobLog>().Where(q => q.Message == "aaaa9").OrderByDescending(q => q.JobLogId).ToPageList(1, 20);
+            //var dataList = service.GetQueryable<SysJobLog>().Where(q => q.Message == "aaaa9").OrderByDescending(q => q.JobLogId).ToPageList(1, 20);
+
+            //var dataMemList = memservice.GetQueryable<MemMemberAccount>().Where(q => q.TrueName == "aaaa9").OrderByDescending(q => q.MemberId).ToPageList(1, 20);
+
+            // DataResultList<MemMemberAccount> memberList = new DataResultList<MemMemberAccount>();
+
+
+            var memberList = memservice.GetPageList(1, 20, "");
         }
 
         static void Count()

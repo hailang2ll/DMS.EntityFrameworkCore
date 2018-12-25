@@ -23,7 +23,6 @@ namespace DMS.EntityFrameworkCore.Repository.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Integrated Security=False;server=192.168.0.50;database=trydou_sys;User ID=sa;Password=123456;Connect Timeout=30");
             }
         }
@@ -77,9 +76,7 @@ namespace DMS.EntityFrameworkCore.Repository.Models
 
                 entity.ToTable("Sys_JobLog");
 
-                entity.Property(e => e.JobLogId)
-                    .HasColumnName("JobLogID")
-                    .ValueGeneratedNever();
+                entity.Property(e => e.JobLogId).HasColumnName("JobLogID");
 
                 entity.Property(e => e.CreateTime)
                     .HasColumnType("datetime")
