@@ -79,9 +79,9 @@ namespace DMS.EntityFrameworkCore.Service
     {
         /// <summary>
         /// 
-        /// </summary>
+        /// </summary> 
         public SysJobLogService()
-            : base(new WALIUJR_SYSContext()) { }
+            : base(new trydou_sysContext()) { }
 
         /// <summary>
         /// 同步插入
