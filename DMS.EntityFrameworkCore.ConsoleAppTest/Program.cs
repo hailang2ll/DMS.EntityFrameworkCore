@@ -14,9 +14,9 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
 
         static void Main(string[] args)
         {
-            Get();
+            //Get();
             //Count();
-            //Insert();
+            Insert();
             //Update();
             //Delete();
 
