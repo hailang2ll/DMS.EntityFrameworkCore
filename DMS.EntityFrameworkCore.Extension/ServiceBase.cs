@@ -50,6 +50,21 @@ namespace DMS.EntityFrameworkCore.Extension
         }
 
         /// <summary>
+        /// 获取第最后一条数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public T LastOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate != null)
+            {
+                return _context.Set<T>().LastOrDefault(predicate);
+            }
+            return _context.Set<T>().LastOrDefault();
+        }
+
+        /// <summary>
         /// 如果查不数据直接报错
         /// </summary>
         /// <param name="expression"></param>
@@ -323,6 +338,21 @@ namespace DMS.EntityFrameworkCore.Extension
                 return await _context.Set<T>().FirstOrDefaultAsync(predicate);
             }
             return await _context.Set<T>().FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// 获取最后一条数据
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        public async Task<T> LastOrDefaultAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            if (predicate != null)
+            {
+                return await _context.Set<T>().LastOrDefaultAsync(predicate);
+            }
+            return await _context.Set<T>().LastOrDefaultAsync();
         }
 
         /// <summary>

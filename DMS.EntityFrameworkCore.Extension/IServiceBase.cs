@@ -13,6 +13,7 @@ namespace DMS.EntityFrameworkCore.Extension
     {
         #region 同步
         T FirstOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+        T LastOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class;
         T First<T>(Expression<Func<T, bool>> predicate = null) where T : class;
         List<T> GetList<T>(Expression<Func<T, bool>> predicate = null) where T : class;
 
@@ -40,6 +41,7 @@ namespace DMS.EntityFrameworkCore.Extension
 
         #region 异步
         Task<T> FirstOrDefaultAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+        Task<T> LastOrDefaultAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
         Task<T> FirstAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
         Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
 
