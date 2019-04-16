@@ -95,7 +95,7 @@ intFlag = service.Update(list);
 Console.WriteLine("循环修改状态：" + intFlag);             
 ```
            
-### lambda修改，目前还在完善中。。。    
+### lambda修改    
 ```c#           
 intFlag = service.Update(q => q.Message == "aaaa1" && q.JobLogType == 1, o => new SysJobLog() { Message = "这是lambda修改" });             
 Console.WriteLine("表达式修改状态：" + intFlag);             
