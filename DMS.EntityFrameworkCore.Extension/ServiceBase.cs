@@ -278,7 +278,7 @@ namespace DMS.EntityFrameworkCore.Extension
         }
 
         /// <summary>
-        /// 目前还不支持
+        /// 
         /// </summary>
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
