@@ -1,8 +1,10 @@
 ﻿using DMS.BaseFramework.Common.BaseResult;
+using DMS.BaseFramework.Common.Utility;
 using DMS.EntityFrameworkCore.Extension;
 using DMS.EntityFrameworkCore.Repository.MemberModels;
 using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.EntityFrameworkCore.Service;
+using EFCore.BulkExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,27 +32,106 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
 
         static void Get()
         {
-            //var entity = service.FirstOrDefault<SysJobLog>(q => q.JobLogId == 8);
-            //if (entity == null)
+            //var entity1 = service.FirstOrDefault<SysJobLog>(q => q.JobLogId == 2);
+            //var entity2 = service.LastOrDefault<SysJobLog>(q => q.JobLogId > 2);
+            //var entity3 = service.First<SysJobLog>(q => q.JobLogId > 300);
+            //var entity4 = service.GetList<SysJobLog>(q => q.JobLogId > 2);
+
+            //var key1 = service.GetByKey<SysJobLog>(1);
+            //key1.JobLogId = 2;
+
+            //var dataList = service.GetQueryable<SysJobLog>().Select(q => new { q.JobLogId, q.Message, q.CreateTime })
+            //.Where(q => q.Message.Contains("aaaa8")).OrderByDescending(q => q.CreateTime).ToPageList(1, 16);
+
+            //var count = service.Count<SysJobLog>(q => q.Message.Contains("aaaa8"));
+
+
+            #region 删除
+            //var entity1 = service.FirstOrDefault<SysJobLog>(q => q.JobLogId == 0);
+            //var del = service.Delete<SysJobLog>(entity1);
+
+            //var entity4 = service.GetList<SysJobLog>(q => q.JobLogId <= 2);
+            //del = service.Delete<SysJobLog>(entity4);
+
+            //List<int> ins = new List<int>() {
+            //    4,5
+            //};
+            //del = service.Delete<SysJobLog>(q => ins.Contains(q.JobLogId));
+
+            //var del = service.DeleteBulk<SysJobLog>(q => q.JobLogId <= 7);
+
+            #endregion
+            //var entity = service.FirstOrDefault<SysJobLog>(q => q.JobLogId == 1);
+            //entity.Message = "我是第一条修改1";
+            //intFlag = service.Update(entity);
+
+            #region 修改2，多条记录一起修改
+            List<int> ints = new List<int>() {
+                    { 8},
+                    { 9},
+                    { 10},
+                };
+            List<SysJobLog> sysJobLogs = new List<SysJobLog>();
+            var list = service.GetList<SysJobLog>(q => ints.Contains(q.JobLogId));
+            foreach (var item in list)
+            {
+                item.Message = "我是循环被修改的値";
+                sysJobLogs.Add(item);
+                SysJobLog sysJobLog = list.Where(q => q.JobLogId == 8).FirstOrDefault();
+                if (sysJobLog != null)
+                {
+                    sysJobLog.JobLogId = 11;
+                    sysJobLogs.Add(sysJobLog);
+                }
+            }
+            intFlag = service.Update(sysJobLogs);
+            //intFlag = service.Update(list);
+
+            //Console.WriteLine("循环修改状态：" + intFlag);
+            #endregion
+
+            // intFlag = service.UpdateBulk<SysJobLog>(o => new SysJobLog() { Message = "这是lambda修改" }, q => q.Message.Contains("我是循环") && q.JobLogType <= 10);
+
+
+            //var entity4 = service.GetList<SysJobLog>(q => ints.Contains(q.JobLogId));
+            //foreach (var item in entity4)
             //{
-            //    Console.WriteLine("实体为空");
+            //    item.Message = "我是被跟踪的7";
             //}
-            //else
+            //var flag = service.DbContext.SaveChanges();
+
+            //query.Where(q => q.No == No).BatchUpdate(q => new TEST
             //{
-            //    Console.WriteLine("查询一个实体：" + entity.Message);
+            //    Flag = 0,
+            //    Status = 0,
+            //    PayPrice = (payStatusFlag == (int)EnumPayStatusFlag.Complete ? q.OrderPrice : q.OrderPrice * summaryOrderMst.Discount)
+            //});
+
+
+            // var flag = service.Update<SysJobLog>(entity4);
+
+
+            //service.Add();
+
+
+            //foreach (var item in entity4)
+            //{
+            //    item.Name = item.Name + "我是修改的1";
             //}
 
-            //entity = service.First<SysJobLog>(q => q.JobLogId == 9);
-            //var list = service.GetList<SysJobLog>(q => q.Message == "我是循环被修改的値");
+            //SysJobLog insertJobLog = new SysJobLog()
+            //{
+            //    Name = "我是新增加的1",
+            //    CreateTime = DateTime.Now,
+            //    Message = "111",
+            //    TaskLogType = 1,
+            //    JobLogType = 1,
+            //    ServerIp = "0.0"
+            //};
+            //entity4.Add(insertJobLog);
 
-            //var dataList = service.GetQueryable<SysJobLog>().Where(q => q.Message == "aaaa9").OrderByDescending(q => q.JobLogId).ToPageList(1, 20);
+            //service.BulkInsertOrUpdate<SysJobLog>(entity4);
 
-            //var dataMemList = memservice.GetQueryable<MemMemberAccount>().Where(q => q.TrueName == "aaaa9").OrderByDescending(q => q.MemberId).ToPageList(1, 20);
-
-            // DataResultList<MemMemberAccount> memberList = new DataResultList<MemMemberAccount>();
-
-
-            var memberList = memservice.GetPageList(1, 20, "");
         }
 
         static void Count()
@@ -131,14 +212,14 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
             #endregion
 
             #region 修改3，目前还不支持
-            intFlag = service.Update<SysJobLog>(o => new SysJobLog() { Message = "这是lambda修改" }, q => q.Message == "aaaa1" && q.JobLogType == 1);
-            Console.WriteLine("表达式修改状态：" + intFlag);
+            //intFlag = service.Update<SysJobLog>(o => new SysJobLog() { Message = "这是lambda修改" }, q => q.Message == "aaaa1" && q.JobLogType == 1);
+            //Console.WriteLine("表达式修改状态：" + intFlag);
             #endregion
 
         }
         static void Delete()
         {
-            var entity = service.GetByKey<SysJobLog, int>(8);
+            var entity = service.GetByKey<SysJobLog>(8);
             intFlag = service.Delete(entity);
             Console.WriteLine("实体删除状态：" + intFlag);
 
@@ -151,8 +232,7 @@ namespace DMS.BaseFramework.EFCore.ConsoleAppTest
             intFlag = service.Delete(list);
             Console.WriteLine("批量实体删除状态：" + intFlag);
 
-            intFlag = service.Delete<SysJobLog>(12);
-            Console.WriteLine("ID删除状态：" + intFlag);
+
 
             intFlag = service.Delete<SysJobLog>(q => q.Message == "我是循环被修改的値");
             Console.WriteLine("表达示删除状态：" + intFlag);

@@ -29,10 +29,10 @@ namespace DMS.EntityFrameworkCore.Extension
             result.TotalRecord = query.Count();
             if (result.TotalRecord > 0)
             {
-                if (!query.ToString().Contains("ORDER BY"))
-                {
-                    query = query.OrderBy(e => 0);
-                }
+                //if (!query.ToString().Contains("ORDER BY"))
+                //{
+                //    query = query.OrderBy(e => 0);
+                //}
                 if (pageIndex == 1)
                 {
                     query = query.Take(result.PageSize);
@@ -49,15 +49,6 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return result;
         }
-
-        /// <summary>
-        /// 异步分页查询方法
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="query"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
         public static async Task<DataResultList<T>> ToPageListAsync<T>(this IQueryable<T> query, int pageIndex, int pageSize) where T : class
         {
             DataResultList<T> result = new DataResultList<T>()
@@ -68,10 +59,10 @@ namespace DMS.EntityFrameworkCore.Extension
             result.TotalRecord = await query.CountAsync();
             if (result.TotalRecord > 0)
             {
-                if (!query.ToString().Contains("ORDER BY"))
-                {
-                    query = query.OrderBy(e => 0);
-                }
+                //if (!query.ToString().Contains("ORDER BY"))
+                //{
+                //    query = query.OrderBy(e => 0);
+                //}
                 if (pageIndex == 1)
                 {
                     query = query.Take(result.PageSize);
@@ -89,17 +80,8 @@ namespace DMS.EntityFrameworkCore.Extension
             return result;
         }
         #endregion
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="columnName"></param>
-        /// <returns></returns>
-        public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string columnName) where T : class
-        {
-            return OrderByInternal(source, columnName, false, false);
-        }
+
+
 
         /// <summary>
         /// 
@@ -108,10 +90,22 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="source"></param>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        public static IQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string columnName) where T : class
-        {
-            return OrderByInternal(source, columnName, true, false);
-        }
+        //public static IQueryable<T> OrderBy<T>(this IQueryable<T> source, string columnName) where T : class
+        //{
+        //    return OrderByInternal(source, columnName, false, false);
+        //}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        //public static IQueryable<T> OrderByDescending<T>(this IQueryable<T> source, string columnName) where T : class
+        //{
+        //    return OrderByInternal(source, columnName, true, false);
+        //}
 
         /// <summary>
         /// 
@@ -122,50 +116,38 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="descending"></param>
         /// <param name="thenBy"></param>
         /// <returns></returns>
-        private static IQueryable<T> OrderByInternal<T>(this IQueryable<T> source, string columnName, bool descending, bool thenBy) where T : class
-        {
-            Type type = typeof(T);
-            PropertyInfo property = type.GetProperty(columnName);
-            if (property == null)
-                throw new ArgumentException("propertyName", "Not Exist");
+        //private static IQueryable<T> OrderByInternal<T>(this IQueryable<T> source, string columnName, bool descending, bool thenBy) where T : class
+        //{
+        //    Type type = typeof(T);
+        //    PropertyInfo property = type.GetProperty(columnName);
+        //    if (property == null)
+        //        throw new ArgumentException("propertyName", "Not Exist");
 
-            ParameterExpression param = Expression.Parameter(type, "p");
-            Expression propertyAccessExpression = Expression.MakeMemberAccess(param, property);
-            LambdaExpression orderByExpression = Expression.Lambda(propertyAccessExpression, param);
-            string methodName = string.Empty;
+        //    ParameterExpression param = Expression.Parameter(type, "p");
+        //    Expression propertyAccessExpression = Expression.MakeMemberAccess(param, property);
+        //    LambdaExpression orderByExpression = Expression.Lambda(propertyAccessExpression, param);
+        //    string methodName = string.Empty;
 
-            if (descending && thenBy)
-            {
-                methodName = "ThenByDescending";
-            }
-            else if (descending && !thenBy)
-            {
-                methodName = "OrderByDescending";
-            }
-            else if (!descending && thenBy)
-            {
-                methodName = "ThenBy";
-            }
-            else if (!descending && !thenBy)
-            {
-                methodName = "OrderBy";
-            }
-            //string methodName = descending ? "OrderByDescending" : "OrderBy";
-            MethodCallExpression resultExp = Expression.Call(typeof(Queryable), methodName, new Type[] { type, property.PropertyType }, source.Expression, Expression.Quote(orderByExpression));
-            return source.Provider.CreateQuery<T>(resultExp);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="source"></param>
-        /// <param name="columnName"></param>
-        /// <returns></returns>
-        public static IQueryable<T> ThenBy<T>(this IQueryable<T> source, string columnName) where T : class
-        {
-            return OrderByInternal(source, columnName, false, true);
-        }
+        //    if (descending && thenBy)
+        //    {
+        //        methodName = "ThenByDescending";
+        //    }
+        //    else if (descending && !thenBy)
+        //    {
+        //        methodName = "OrderByDescending";
+        //    }
+        //    else if (!descending && thenBy)
+        //    {
+        //        methodName = "ThenBy";
+        //    }
+        //    else if (!descending && !thenBy)
+        //    {
+        //        methodName = "OrderBy";
+        //    }
+        //    //string methodName = descending ? "OrderByDescending" : "OrderBy";
+        //    MethodCallExpression resultExp = Expression.Call(typeof(Queryable), methodName, new Type[] { type, property.PropertyType }, source.Expression, Expression.Quote(orderByExpression));
+        //    return source.Provider.CreateQuery<T>(resultExp);
+        //}
 
         /// <summary>
         /// 
@@ -174,9 +156,21 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="source"></param>
         /// <param name="columnName"></param>
         /// <returns></returns>
-        public static IQueryable<T> ThenByDescending<T>(this IQueryable<T> source, string columnName) where T : class
-        {
-            return OrderByInternal(source, columnName, true, true);
-        }
+        //public static IQueryable<T> ThenBy<T>(this IQueryable<T> source, string columnName) where T : class
+        //{
+        //    return OrderByInternal(source, columnName, false, true);
+        //}
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="source"></param>
+        /// <param name="columnName"></param>
+        /// <returns></returns>
+        //public static IQueryable<T> ThenByDescending<T>(this IQueryable<T> source, string columnName) where T : class
+        //{
+        //    return OrderByInternal(source, columnName, true, true);
+        //}
     }
 }

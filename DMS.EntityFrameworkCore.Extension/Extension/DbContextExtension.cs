@@ -1,4 +1,5 @@
 ﻿using DMS.BaseFramework.Common.BaseResult;
+using DMS.EntityFrameworkCore.Extension.Common;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace DMS.EntityFrameworkCore.Extension
  */
     public static class DbContextExtension
     {
-        #region 同步
+
         #region Add 添加，批量添加
         /// <summary>
         /// 添加一条实体数据
@@ -32,9 +33,13 @@ namespace DMS.EntityFrameworkCore.Extension
             context.Set<T>().Add(entity);
             return context.SaveChanges();
         }
-
+        public static async Task<int> InsertAsync<T>(this DbContext context, T entity) where T : class
+        {
+            await context.Set<T>().AddAsync(entity);
+            return await context.SaveChangesAsync();
+        }
         /// <summary>
-        /// 
+        /// 批量插入
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="context"></param>
@@ -48,6 +53,15 @@ namespace DMS.EntityFrameworkCore.Extension
                 context.Set<T>().Add(entity);
             }
             return context.SaveChanges();
+        }
+        public static async Task<int> InsertAsync<T>(this DbContext context, List<T> entities) where T : class
+        {
+            if (entities.Count() == 0) return 0;
+            foreach (T entity in entities)
+            {
+                await context.Set<T>().AddAsync(entity);
+            }
+            return await context.SaveChangesAsync();
         }
         #endregion
 
@@ -73,6 +87,19 @@ namespace DMS.EntityFrameworkCore.Extension
 
             return context.SaveChanges();
         }
+        public static async Task<int> DeleteAsync<T>(this DbContext context, T entity) where T : class
+        {
+            context.Set<T>().Attach(entity);
+            context.Set<T>().Remove(entity);
+            return await context.SaveChangesAsync();
+        }
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="entities"></param>
+        /// <returns></returns>
         public static int Delete<T>(this DbContext context, List<T> entities) where T : class
         {
             if (entities.Count() == 0) return 0;
@@ -83,6 +110,25 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return context.SaveChanges();
         }
+        public static async Task<int> DeleteAsync<T>(this DbContext context, List<T> entities) where T : class
+        {
+            if (entities.Count() == 0)
+                return 0;
+
+            foreach (T entity in entities)
+            {
+                context.Set<T>().Attach(entity);
+                context.Set<T>().Remove(entity);
+            }
+            return await context.SaveChangesAsync();
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
         public static int Delete<T>(this DbContext context, Expression<Func<T, bool>> predicate) where T : class
         {
             int rows = 0;
@@ -99,9 +145,39 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return rows;
         }
+        public static async Task<int> DeleteAsync<T>(this DbContext context, Expression<Func<T, bool>> predicate) where T : class
+        {
+            int rows = 0;
+            IQueryable<T> entry = context.Set<T>().Where(predicate);
+            List<T> list = entry.ToList();
+            if (list.Count > 0)
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    context.Set<T>().Remove(list[i]);
+                }
+                rows = await context.SaveChangesAsync();
+            }
+            return rows;
+        }
         #endregion
 
         #region Modifiy 修改，批量修改，Lambda表达示
+        /// <summary>
+        /// 修改公共方法
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="context"></param>
+        /// <param name="entity"></param>
+        private static void ModifiyInternal<T>(this DbContext context, T entity) where T : class
+        {
+            var entry = context.Entry<T>(entity);
+            if (entry.State == EntityState.Detached)
+            {
+                context.Set<T>().Attach(entity);
+            }
+            entry.State = EntityState.Modified;
+        }
         /// <summary>
         /// 修改实体数据
         /// </summary>
@@ -114,7 +190,11 @@ namespace DMS.EntityFrameworkCore.Extension
             ModifiyInternal(context, entity);
             return context.SaveChanges();
         }
-
+        public static async Task<int> ModifiyAsync<T>(this DbContext context, T entity) where T : class
+        {
+            ModifiyInternal(context, entity);
+            return await context.SaveChangesAsync();
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -131,7 +211,15 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return context.SaveChanges();
         }
-
+        public static async Task<int> ModifiyAsync<T>(this DbContext context, List<T> entities) where T : class
+        {
+            if (entities.Count() == 0) return 0;
+            foreach (T entity in entities)
+            {
+                ModifiyInternal(context, entity);
+            }
+            return await context.SaveChangesAsync();
+        }
         /// <summary>
         /// 
         /// </summary>
@@ -140,10 +228,9 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
         /// <returns></returns>
-        public static int Modifiy<T>(this DbContext context, Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
+        public static int Modifiy<T>(this DbContext context,Expression<Func<T, bool>> where) where T : class
         {
-
-
+            #region 注释
             //DmlExpressionParser<T> updateExpressionParser = new UpdateExpressionParser<T>(context.Database.ProviderName, set, where);
             //string script = updateExpressionParser.GetDmlCommand();
             //rows = context.Database.ExecuteSqlCommand(script);
@@ -214,11 +301,7 @@ namespace DMS.EntityFrameworkCore.Extension
             //    //    sb.Append(result[i].Value.Replace("\"", "'"));
             //    //}
             //}
-
-
-
-
-
+            #endregion
 
             int rows = 0;
             IQueryable<T> entry = context.Set<T>().Where(where);
@@ -230,6 +313,27 @@ namespace DMS.EntityFrameworkCore.Extension
                     ModifiyInternal(context, item);
                 }
                 rows = context.SaveChanges();
+            }
+            return rows;
+        }
+        public static async Task<int> ModifiyAsync<T>(this DbContext context, Expression<Func<T, bool>> where) where T : class
+        {
+            #region 扩展方法
+            //TSqlAssembledResult result = TSqlAssembled.Update<T>(set, where);
+            //context.Database.ExecuteSqlCommand(result.SqlStr);
+            //return await context.SaveChangesAsync();
+            #endregion
+
+            int rows = 0;
+            IQueryable<T> entry = context.Set<T>().Where(where);
+            List<T> list = await entry.ToListAsync();
+            if (list.Count > 0)
+            {
+                foreach (var item in list)
+                {
+                    ModifiyInternal(context, item);
+                }
+                rows = await context.SaveChangesAsync();
             }
             return rows;
         }
@@ -249,180 +353,12 @@ namespace DMS.EntityFrameworkCore.Extension
             IQueryable<T> query = context.Set<T>().AsQueryable();
             return query.ToPageList<T>(pageIndex, pageSize);
         }
-        #endregion
-        #endregion
-
-        #region 异步
-        /// <summary>
-        /// 添加一条实体数据
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static async Task<int> InsertAsync<T>(this DbContext context, T entity) where T : class
-        {
-            await context.Set<T>().AddAsync(entity);
-            return await context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// 批量添加
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static async Task<int> InsertAsync<T>(this DbContext context, List<T> entities) where T : class
-        {
-            if (entities.Count() == 0) return 0;
-            foreach (T entity in entities)
-            {
-                await context.Set<T>().AddAsync(entity);
-            }
-            return await context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// 根据主健删除一条实体数据
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static async Task<int> DeleteAsync<T>(this DbContext context, T entity) where T : class
-        {
-            context.Set<T>().Attach(entity);
-            context.Set<T>().Remove(entity);
-            return await context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// 批量删除
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static async Task<int> DeleteAsync<T>(this DbContext context, List<T> entities) where T : class
-        {
-            if (entities.Count() == 0)
-                return 0;
-
-            foreach (T entity in entities)
-            {
-                context.Set<T>().Attach(entity);
-                context.Set<T>().Remove(entity);
-            }
-            return await context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// 批量删除
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="predicate"></param>
-        /// <returns></returns>
-        public static async Task<int> DeleteAsync<T>(this DbContext context, Expression<Func<T, bool>> predicate) where T : class
-        {
-            int rows = 0;
-            IQueryable<T> entry = context.Set<T>().Where(predicate);
-            List<T> list = entry.ToList();
-            if (list.Count > 0)
-            {
-                for (int i = 0; i < list.Count; i++)
-                {
-                    context.Set<T>().Remove(list[i]);
-                }
-                rows = await context.SaveChangesAsync();
-            }
-            return rows;
-        }
-
-        /// <summary>
-        /// 修改实体数据
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entity"></param>
-        /// <returns></returns>
-        public static async Task<int> ModifiyAsync<T>(this DbContext context, T entity) where T : class
-        {
-            ModifiyInternal(context, entity);
-            return await context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entities"></param>
-        /// <returns></returns>
-        public static async Task<int> ModifiyAsync<T>(this DbContext context, List<T> entities) where T : class
-        {
-            if (entities.Count() == 0) return 0;
-            foreach (T entity in entities)
-            {
-                ModifiyInternal(context, entity);
-            }
-            return await context.SaveChangesAsync();
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="predicate"></param>
-        /// <param name="updateExpression"></param>
-        /// <returns></returns>
-        public static async Task<int> ModifiyAsync<T>(this DbContext context, Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
-        {
-            int rows = 0;
-
-            IQueryable<T> entry = context.Set<T>().Where(where);
-            List<T> list = await entry.ToListAsync();
-            if (list.Count > 0)
-            {
-                foreach (var item in list)
-                {
-                    ModifiyInternal(context, item);
-                }
-                rows = await context.SaveChangesAsync();
-            }
-            return rows;
-        }
-
-        /// <summary>
-        /// 取得分页数据源
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="pageIndex"></param>
-        /// <param name="pageSize"></param>
-        /// <returns></returns>
         public static async Task<DataResultList<T>> ToPageListAsync<T>(this DbContext context, int pageIndex, int pageSize) where T : class
         {
             IQueryable<T> query = context.Set<T>().AsQueryable();
             return await query.ToPageListAsync(pageIndex, pageSize);
         }
         #endregion
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context"></param>
-        /// <param name="entity"></param>
-        private static void ModifiyInternal<T>(this DbContext context, T entity) where T : class
-        {
-            var entry = context.Entry<T>(entity);
-            if (entry.State == EntityState.Detached)
-            {
-                context.Set<T>().Attach(entity);
-            }
-            entry.State = EntityState.Modified;
-        }
+
     }
 }

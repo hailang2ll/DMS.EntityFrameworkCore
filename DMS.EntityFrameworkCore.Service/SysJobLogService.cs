@@ -90,17 +90,17 @@ namespace DMS.EntityFrameworkCore.Service
         public ResponseResult Add()
         {
             ResponseResult result = new ResponseResult();
-            SysJobLog jobLogEntity = new SysJobLog()
+            SysJobLog jobEntity = new SysJobLog()
             {
                 Name = "测试",
                 JobLogType = 1,
                 ServerIp = "::",
                 TaskLogType = 1,
                 Message = "测试消息",
-                CreateTime = DateTime.Now
+                CreateTime = DateTime.Now, 
             };
 
-            SysLog jobEntity = new SysLog()
+            SysLog logEntity = new SysLog()
             {
                 Logger = "测试数据",
                 Level = "测试等级",
@@ -114,7 +114,7 @@ namespace DMS.EntityFrameworkCore.Service
                 Url = "http://www.jinglih.com/",
                 MemberName = "17623827239",
                 CreateTime = DateTime.Now,
-                Exception = "测试异常信息"
+                Exception = "测试异常信息", 
             };
 
             //Mysql常规的写法，可以统一
@@ -143,11 +143,13 @@ namespace DMS.EntityFrameworkCore.Service
             using (TransactionScope scope = new TransactionScope())
             {
                 Insert(jobEntity);
-                Insert(jobLogEntity);
+                Insert(logEntity);
+                var jobid = jobEntity.JobLogId;
+                var logid = logEntity.LogId;
 
                 //锁表查询测试
-                SysLog logEntity = FirstOrDefault<SysLog>(q => q.LogId == 86);
                 SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 13);
+                SysLog logEntity0 = FirstOrDefault<SysLog>(q => q.LogId == 2);
 
                 scope.Complete();//提交事务
             }
@@ -184,7 +186,7 @@ namespace DMS.EntityFrameworkCore.Service
                 Thread = "测试数据",
                 Url = "http://www.jinglih.com/",
                 MemberName = "17623827239",
-                CreateTime = DateTime.Now,
+                CreateTime = DateTime.Now, 
                 Exception = "测试异常信息"
             };
 
@@ -196,7 +198,7 @@ namespace DMS.EntityFrameworkCore.Service
                 await InsertAsync(jobLogEntity);
 
                 //锁表查询测试
-                SysLog logEntity = await FirstOrDefaultAsync<SysLog>(q => q.LogId == 86);
+                SysLog logEntity = await FirstOrDefaultAsync<SysLog>(q => q.LogId == 2101);
                 SysJobLog entity = await FirstOrDefaultAsync<SysJobLog>(q => q.JobLogId == 13);
 
                 //提交事务
@@ -224,12 +226,13 @@ namespace DMS.EntityFrameworkCore.Service
         /// <returns></returns>
         public SysJobLog GetEntity(int id)
         {
-            SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 2);
+            var entity1 = FirstOrDefault<SysJobLog>(q => q.JobLogId == 2);
+
             LessLog.Info("我是一条测试日志");
 
             var json = typeof(EnumMemUserType).ToJsonByEnum();
             var des = EnumMemUserType.QQType.GetDescription();
-            return entity;
+            return entity1;
         }
 
         /// <summary>

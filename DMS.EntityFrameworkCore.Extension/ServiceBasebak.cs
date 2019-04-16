@@ -12,7 +12,7 @@ namespace DMS.EntityFrameworkCore.Extension
     /// <summary>
     /// 服务基类实现
     /// </summary>
-    public class ServiceBase : IServiceBase
+    public class ServiceBasebak : IServiceBase
     {
         /// <summary>
         /// 数据库上下文
@@ -28,7 +28,7 @@ namespace DMS.EntityFrameworkCore.Extension
         /// 
         /// </summary>
         /// <param name="context"></param>
-        public ServiceBase(DbContext context)
+        public ServiceBasebak(DbContext context)
         {
             _context = context;
         }
@@ -129,37 +129,26 @@ namespace DMS.EntityFrameworkCore.Extension
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public List<T> GetList<T>(Expression<Func<T, bool>> predicate = null, bool isTracking = true) where T : class
+        public List<T> GetList<T>(Expression<Func<T, bool>> predicate = null) where T : class
         {
-            IQueryable<T> query = _context.Set<T>().AsQueryable();
-            if (!isTracking)
-            {
-                query = query.AsNoTracking();
-            }
-
             if (predicate == null)
             {
-                return query.ToList();
+                return _context.Set<T>().AsNoTracking().ToList();
             }
             else
             {
-                return query.Where(predicate).ToList();
+                return _context.Set<T>().Where(predicate).ToList();
             }
         }
-        public async Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> predicate = null, bool isTracking = true) where T : class
+        public async Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class
         {
-            IQueryable<T> query = _context.Set<T>().AsQueryable();
-            if (!isTracking)
-            {
-                query = query.AsNoTracking();
-            }
             if (predicate == null)
             {
-                return await query.ToListAsync();
+                return await _context.Set<T>().AsNoTracking().ToListAsync();
             }
             else
             {
-                return await query.Where(predicate).ToListAsync();
+                return await _context.Set<T>().Where(predicate).ToListAsync();
             }
         }
         /// <summary>
@@ -282,24 +271,59 @@ namespace DMS.EntityFrameworkCore.Extension
             return await _context.DeleteAsync(predicate);
         }
         /// <summary>
-        /// 批量删除
+        /// 根据主键删除
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="where"></param>
+        /// <param name="key"></param>
         /// <returns></returns>
-        public int DeleteBulk<T>(Expression<Func<T, bool>> where) where T : class, new()
+        public int Delete<T>(int key) where T : class
         {
-            return _context.Set<T>().Where(where).BatchDelete();
+            T entity = GetByKey<T>(key);
+            if (entity != null)
+            {
+                return Delete(entity);
+            }
+            return 0;
         }
-        public async Task<int> DeleteBulkAsync<T>(Expression<Func<T, bool>> where) where T : class, new()
+        public async Task<long> DeleteAsync<T>(int key) where T : class
         {
-            return await _context.Set<T>().Where(where).BatchDeleteAsync();
+            T entity = await GetByKeyAsync<T>(key);
+            if (entity != null)
+            {
+                return await DeleteAsync(entity);
+            }
+            return 0;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        public int Delete<T>(Guid key) where T : class
+        {
+            T entity = this.GetByKey<T>(key);
+            if (entity != null)
+            {
+                return Delete(entity);
+            }
+            return 0;
+        }
+        public async Task<long> DeleteAsync<T>(Guid key) where T : class
+        {
+            T entity = await GetByKeyAsync<T>(key);
+            if (entity != null)
+            {
+                return await DeleteAsync(entity);
+            }
+            return 0;
+        }
+
         #endregion
 
         #region 修改实体
         /// <summary>
-        /// 根据实体修改
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entity"></param>
@@ -312,7 +336,7 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return 0;
         }
-        public async Task<int> UpdateAsync<T>(T entity) where T : class
+        public async Task<long> UpdateAsync<T>(T entity) where T : class
         {
             if (entity != null)
             {
@@ -321,7 +345,7 @@ namespace DMS.EntityFrameworkCore.Extension
             return 0;
         }
         /// <summary>
-        /// 根据实体修改
+        /// 
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="entities"></param>
@@ -334,7 +358,7 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return 0;
         }
-        public async Task<int> UpdateAsync<T>(List<T> entities) where T : class
+        public async Task<long> UpdateAsync<T>(List<T> entities) where T : class
         {
             if (entities != null && entities.Count > 0)
             {
@@ -343,46 +367,18 @@ namespace DMS.EntityFrameworkCore.Extension
             return 0;
         }
         /// <summary>
-        /// 根据条件查出实体后修改
+        /// 目前还不支持
         /// </summary>
         /// <param name="predicate"></param>
         /// <param name="updateExpression"></param>
         /// <returns></returns>
-        public int Update<T>(Expression<Func<T, bool>> where) where T : class
+        public int Update<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class
         {
-            return _context.Modifiy(where);
+            return _context.Modifiy(set, where);
         }
-        public async Task<int> UpdateAsync<T>(Expression<Func<T, bool>> where) where T : class
+        public async Task<long> UpdateAsync<T>(Expression<Func<T, bool>> set, Expression<Func<T, bool>> where) where T : class
         {
-            return await _context.ModifiyAsync(where);
-        }
-        /// <summary>
-        /// 批量修改扩展
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="set"></param>
-        /// <param name="where"></param>
-        /// <returns></returns>
-        public int UpdateBulk<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class, new()
-        {
-            return _context.Set<T>().Where(where).BatchUpdate(set);
-        }
-        public async Task<int> UpdateBulkAsync<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class, new()
-        {
-            return await _context.Set<T>().Where(where).BatchUpdateAsync(set);
-        }
-        /// <summary>
-        /// 插入与更新
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="entities"></param>
-        public void BulkInsertOrUpdate<T>(IList<T> entities) where T : class
-        {
-            _context.BulkInsertOrUpdate(entities);
-        }
-        public void BulkInsertOrUpdateAsync<T>(IList<T> entities) where T : class
-        {
-            _context.BulkInsertOrUpdateAsync(entities);
+            return await _context.ModifiyAsync(set, where);
         }
         #endregion
 
@@ -419,7 +415,8 @@ namespace DMS.EntityFrameworkCore.Extension
         {
             if (predicate != null)
             {
-                return _context.Set<T>().LongCount(predicate);
+                return _context.Set<T>()
+                               .LongCount(predicate);
             }
             return _context.Set<T>().LongCount();
         }
@@ -433,11 +430,43 @@ namespace DMS.EntityFrameworkCore.Extension
         }
         #endregion
 
+        #region 批量更新，删除
+        /// <summary>
+        /// 批量修改
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="set"></param>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int BatchUpdate<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class, new()
+        {
+            return _context.Set<T>().Where(where).BatchUpdate(set);
+        }
+        public async Task<int> BatchUpdateAsync<T>(Expression<Func<T, T>> set, Expression<Func<T, bool>> where) where T : class, new()
+        {
+            return await _context.Set<T>().Where(where).BatchUpdateAsync(set);
+        }
+        /// <summary>
+        /// 批量删除
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="where"></param>
+        /// <returns></returns>
+        public int DeleteBulk<T>(Expression<Func<T, bool>> where) where T : class, new()
+        {
+            return _context.Set<T>().Where(where).BatchDelete();
+        }
+        public async Task<int> DeleteBulkAsync<T>(Expression<Func<T, bool>> where) where T : class, new()
+        {
+            return await _context.Set<T>().Where(where).BatchDeleteAsync();
+        }
+        #endregion
+
 
         /// <summary>
         /// 析构函数
         /// </summary>
-        ~ServiceBase()
+        ~ServiceBasebak()
         {
             if (_context != null)
             {
