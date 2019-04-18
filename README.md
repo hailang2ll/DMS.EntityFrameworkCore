@@ -95,9 +95,9 @@ intFlag = service.Update(list);
 Console.WriteLine("循环修改状态：" + intFlag);             
 ```
            
-### lambda修改    
+### lambda批量修改    
 ```c#           
-intFlag = service.Update(q => q.Message == "aaaa1" && q.JobLogType == 1, o => new SysJobLog() { Message = "这是lambda修改" });             
+intFlag = service.UpdateBulk<SysJobLog>(o => new SysJobLog() { Message = "这是lambda修改" }, q => q.Message.Contains("我是循环") && q.JobLogType <= 10);         
 Console.WriteLine("表达式修改状态：" + intFlag);             
 ```        
 ### 5、删除操作  
@@ -107,7 +107,11 @@ var entity = service.GetByKey<int>(8);
 intFlag = service.Delete(entity);             
 Console.WriteLine("实体删除状态：" + intFlag);             
 ```        
-### 批量删除   
+### 批量删除  
+```c#   
+var del = service.DeleteBulk<SysJobLog>(q => q.JobLogId <= 7) 
+```  
+
 ```c#            
 List<int> ints = new List<int>() {             
                     { 9},             
