@@ -1,8 +1,8 @@
 ## DMS.EntityFrameworkCore           
            
            
-### 基于EntityFrameworkCore框架扩展的基础组件，依赖DMS中基础框架，目前以泛型的方式实现添删改查，支持同步与异步操作，支持复杂的查询，Lambda表达式动态查询            
-           
+### 基于EntityFrameworkCore框架扩展的基础组件，依赖DMS中基础框架，目前以泛型的方式实现添删改查，支持同步与异步操作，支持复杂的查询，同时支持批量更新，批量删除等操作，以及Lambda表达式动态查询          
+
          
 ### 1、GET查询，所有接口实现   
 ```c#     
