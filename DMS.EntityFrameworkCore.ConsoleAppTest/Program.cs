@@ -1,10 +1,5 @@
-﻿using DMS.BaseFramework.Common.BaseResult;
-using DMS.BaseFramework.Common.Utility;
-using DMS.EntityFrameworkCore.Extension;
-using DMS.EntityFrameworkCore.Repository.MemberModels;
-using DMS.EntityFrameworkCore.Repository.Models;
+﻿using DMS.EntityFrameworkCore.Repository.Models;
 using DMS.EntityFrameworkCore.Service;
-using EFCore.BulkExtensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
