@@ -3,8 +3,21 @@
            
 ### 基于EntityFrameworkCore框架扩展的基础组件，依赖DMS中基础框架，目前以泛型的方式实现添删改查，支持同步与异步操作，支持复杂的查询，Lambda表达式动态查询            
            
+
 ### 实例操作             
-### 1、GET查询             
+### 1、GET查询，所有接口实现   
+```c#     
+T FirstOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+Task<T> FirstOrDefaultAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+T First<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+Task<T> FirstAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+T LastOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+Task<T> LastOrDefaultAsync<T>(Expression<Func<T, bool>> predicate = null) where T : class;
+List<T> GetList<T>(Expression<Func<T, bool>> predicate = null, bool isTracking = true) where T : class;
+Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> predicate = null, bool isTracking = true) where T : class;
+T GetByKey<T>(params object[] keyVaules) where T : class;
+Task<T> GetByKeyAsync<T>(params object[] keyVaules) where T : class;
+```    
 ### FirstOrDefault查询  
 ```c#           
 var entity = service.FirstOrDefault(q => q.JobLogId == 8);  
