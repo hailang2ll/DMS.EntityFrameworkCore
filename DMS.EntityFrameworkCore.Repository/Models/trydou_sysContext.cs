@@ -23,7 +23,7 @@ namespace DMS.EntityFrameworkCore.Repository.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Integrated Security=False;server=192.168.0.50;database=trydou_sys;User ID=sa;Password=123456;Connect Timeout=30");
+                //optionsBuilder.UseSqlServer("Integrated Security=False;server=192.168.0.50;database=trydou_sys;User ID=sa;Password=123456;Connect Timeout=30");
             }
         }
 
