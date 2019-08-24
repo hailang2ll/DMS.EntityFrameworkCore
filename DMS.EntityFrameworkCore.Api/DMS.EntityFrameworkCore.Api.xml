@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DMS.EntityFrameworkCore.Api</name>
+    </assembly>
+    <members>
+        <member name="T:DMS.EntityFrameworkCore.Api.Controllers.HomeController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.HomeController.Index">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController.service">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController.Get">
+            <summary>
+            api/SysJobLog
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController.Get(System.Int32)">
+            <summary>
+            api/SysJobLog/5
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController.Post(System.String)">
+            <summary>
+            api/SysJobLog
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController.Put(System.Int32,System.String)">
+            <summary>
+            api/SysJobLog/5
+            </summary>
+            <param name="id"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.SysJobLogController.Delete(System.Int32)">
+            <summary>
+            api/ApiWithActions/5
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="T:DMS.EntityFrameworkCore.Api.Controllers.ValuesController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.ValuesController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.ValuesController.Get(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.ValuesController.Post(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.ValuesController.Put(System.Int32,System.String)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+            <param name="value"></param>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Controllers.ValuesController.Delete(System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="id"></param>
+        </member>
+        <member name="T:DMS.EntityFrameworkCore.Api.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
+        <member name="T:DMS.EntityFrameworkCore.Api.Startup">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Startup.#ctor(Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="env"></param>
+        </member>
+        <member name="P:DMS.EntityFrameworkCore.Api.Startup.Configuration">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Startup.ConfigureServices(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            IServiceProvider
+            </summary>
+            <param name="services"></param>
+            <returns></returns>
+        </member>
+        <member name="M:DMS.EntityFrameworkCore.Api.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+            <summary>
+            
+            </summary>
+            <param name="app"></param>
+            <param name="env"></param>
+        </member>
+    </members>
+</doc>

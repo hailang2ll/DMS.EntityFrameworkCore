@@ -1,10 +1,9 @@
-﻿using DMS.BaseFramework.Common.BaseResult;
-using DMS.BaseFramework.Common.Extension;
-using DMS.BaseFramework.Common.Extension.ExpressionFunc;
+﻿using DMS.Common.BaseResult;
+using DMS.Common.Extensions;
+using DMS.Common.Extensions.ExpressionFunc;
 using DMS.EntityFrameworkCore.Contracts;
 using DMS.EntityFrameworkCore.Extension;
 using DMS.EntityFrameworkCore.Repository.Models;
-using DMS.Exceptionless;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -16,72 +15,16 @@ using System.Transactions;
 
 namespace DMS.EntityFrameworkCore.Service
 {
-    public enum EnumMemUserType
-    {
-        [Description("普通用户")]
-        Nornm = 0,
-        [Description("QQ用户")]
-        QQType = 1,
-        [Description("dfdfdsfd ")]
-        Test = 2
-    }
-
-
-    public class EnumStatusFlag
-    {
-        /// <summary>
-        /// 0未审核 
-        /// </summary>
-        [Description("未审核")]
-        public const int None = 0;
-
-        /// <summary>
-        ///   1待审核(停用)
-        /// </summary>
-        [Description("待审核")]
-        public const int Pending = 1;
-
-        /// <summary>
-        ///  2回收站 
-        /// </summary>
-        [Description("回收站")]
-        public const int Delete = 2;
-
-        /// <summary>
-        /// 3不通过  
-        /// </summary>
-        [Description("不通过")]
-        public const int UnPassed = 3;
-
-        /// <summary>
-        /// 4已审核(启用)
-        /// </summary>
-        [Description("已审核")]
-        public const int Passed = 4;
-
-        /// <summary>
-        /// 5已过期
-        /// </summary>
-        [Description("已过期")]
-        public const int Expired = 5;
-
-        /// <summary>
-        /// 6锁定
-        /// </summary>
-        [Description("锁定")]
-        public const int Locking = 6;
-    }
-
     /// <summary>
     /// 
     /// </summary>
-    public class SysJobLogService : ServiceBase, IDemoService
+    public class SysJobLogService : ServiceBase, ISysJobLogService
     {
         /// <summary>
         /// 
         /// </summary> 
-        public SysJobLogService()
-            : base(new trydou_sysContext()) { }
+        public SysJobLogService(trydou_sysContext context)
+            : base(context) { }
 
         /// <summary>
         /// 同步插入
@@ -117,7 +60,7 @@ namespace DMS.EntityFrameworkCore.Service
                 Exception = "测试异常信息", 
             };
 
-            //Mysql常规的写法，可以统一
+            //Mssql常规的写法，可以统一
             //using (var transaction = DbContext.Database.BeginTransaction())
             //{
             //    try
@@ -144,8 +87,6 @@ namespace DMS.EntityFrameworkCore.Service
             {
                 Insert(jobEntity);
                 Insert(logEntity);
-                var jobid = jobEntity.JobLogId;
-                var logid = logEntity.LogId;
 
                 //锁表查询测试
                 SysJobLog entity = FirstOrDefault<SysJobLog>(q => q.JobLogId == 13);
@@ -207,16 +148,6 @@ namespace DMS.EntityFrameworkCore.Service
             return result;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        //public long Update()
-        //{
-        //    var result = Update<SysJobLog>(q => new SysJobLog() { Message = "修改Mess", Name = "修改的信息" }, q => q.JobLogId == 4 );
-        //    return result;
-        //}
-
 
         #region 所有查询
         /// <summary>
@@ -227,11 +158,6 @@ namespace DMS.EntityFrameworkCore.Service
         public SysJobLog GetEntity(int id)
         {
             var entity1 = FirstOrDefault<SysJobLog>(q => q.JobLogId == 2);
-
-            LessLog.Info("我是一条测试日志");
-
-            var json = typeof(EnumMemUserType).ToJsonByEnum();
-            var des = EnumMemUserType.QQType.GetDescription();
             return entity1;
         }
 

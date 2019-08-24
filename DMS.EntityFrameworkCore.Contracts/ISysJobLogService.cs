@@ -1,14 +1,13 @@
-﻿using DMS.BaseFramework.Common.BaseResult;
+﻿using DMS.Common.BaseResult;
 using DMS.EntityFrameworkCore.Repository.Models;
+using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace DMS.EntityFrameworkCore.Contracts
 {
-    /// <summary>
-    /// 扩展接口，一般继承类没有的接口
-    /// </summary>
-    public interface IDemoService
+   public interface ISysJobLogService
     {
         /// <summary>
         /// 同步新增

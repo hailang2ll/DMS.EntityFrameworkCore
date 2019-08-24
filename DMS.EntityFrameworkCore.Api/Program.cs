@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using NLogs;
 
 namespace DMS.EntityFrameworkCore.Api
 {
@@ -24,6 +25,7 @@ namespace DMS.EntityFrameworkCore.Api
         /// <returns></returns>
         public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
+             .UseNLog("Configs/nlog.config")
                 .UseStartup<Startup>();
     }
 }

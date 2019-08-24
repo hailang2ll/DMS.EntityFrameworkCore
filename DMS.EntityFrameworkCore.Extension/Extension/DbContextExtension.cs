@@ -1,11 +1,9 @@
-﻿using DMS.BaseFramework.Common.BaseResult;
-using DMS.EntityFrameworkCore.Extension.Common;
+﻿using DMS.Common.BaseResult;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DMS.EntityFrameworkCore.Extension
