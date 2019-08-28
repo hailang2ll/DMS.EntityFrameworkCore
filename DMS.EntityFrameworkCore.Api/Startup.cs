@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
+using System.Linq;
 
 namespace DMS.EntityFrameworkCore.Api
 {
@@ -80,6 +81,11 @@ namespace DMS.EntityFrameworkCore.Api
                 app.UseDeveloperExceptionPage();
                 app.UseSwaggerUIV2();
             }
+
+            var context = app.ApplicationServices.GetService<trydou_sysContext>();
+            var entity = context.SysJobLog.FirstOrDefault();
+            Console.WriteLine($"entity={ entity.Message}");
+
             app.UseStaticHttpContext();
             app.UseMvc(routes =>
             {
@@ -88,6 +94,6 @@ namespace DMS.EntityFrameworkCore.Api
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
         }
-     
+
     }
 }
