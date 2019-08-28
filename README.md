@@ -7,7 +7,6 @@ qq交流群：18362376
 作者微信：tangguo_9669
 
 ![运营公众号](https://github.com/hailang2ll/DMS.EntityFrameworkCore/blob/master/gzh02.jpg)
-
 <br />
          
 ### 1、GET查询，所有接口实现   
