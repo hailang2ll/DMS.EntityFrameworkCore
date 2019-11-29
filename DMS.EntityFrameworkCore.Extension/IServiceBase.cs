@@ -22,6 +22,9 @@ namespace DMS.EntityFrameworkCore.Extension
         Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> predicate = null, bool isTracking = true) where T : class;
         T GetByKey<T>(params object[] keyVaules) where T : class;
         Task<T> GetByKeyAsync<T>(params object[] keyVaules) where T : class;
+        Task<T> FromSqlAsync<T>(string sql, Expression<Func<T, T>> select = null, Expression<Func<T, bool>> predicate = null) where T : class;
+ 
+
 
 
         int Insert<T>(T entity) where T : class;

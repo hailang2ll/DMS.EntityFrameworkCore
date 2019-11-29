@@ -1,4 +1,5 @@
 ﻿using DMS.Common.BaseResult;
+using DMS.EntityFrameworkCore.Contracts.Result;
 using DMS.EntityFrameworkCore.Repository.Models;
 using System;
 using System.Collections.Generic;
@@ -57,5 +58,7 @@ namespace DMS.EntityFrameworkCore.Contracts
         /// <param name="searchText"></param>
         /// <returns></returns>
         Task<ResponsePageResult<SysJobLog>> GetPageListAsync(int pageIndex, int pageSize, string searchText);
+
+        Task<SysJobLog> GetFromSql();
     }
 }

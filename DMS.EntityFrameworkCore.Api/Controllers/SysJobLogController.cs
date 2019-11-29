@@ -25,9 +25,11 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<IEnumerable<string>> Get()
         {
-            var entity = service.GetEntity(3);
+            //var entity = service.GetEntity(3);
+            var entity = await service.GetFromSql();
+            
             return new string[] { "value1", "value2" };
         }
 

@@ -2,6 +2,7 @@
 using DMS.Common.Extensions;
 using DMS.Common.Extensions.ExpressionFunc;
 using DMS.EntityFrameworkCore.Contracts;
+using DMS.EntityFrameworkCore.Contracts.Result;
 using DMS.EntityFrameworkCore.Extension;
 using DMS.EntityFrameworkCore.Repository.Models;
 using Microsoft.EntityFrameworkCore;
@@ -40,7 +41,7 @@ namespace DMS.EntityFrameworkCore.Service
                 ServerIp = "::",
                 TaskLogType = 1,
                 Message = "测试消息",
-                CreateTime = DateTime.Now, 
+                CreateTime = DateTime.Now,
             };
 
             SysLog logEntity = new SysLog()
@@ -57,7 +58,7 @@ namespace DMS.EntityFrameworkCore.Service
                 Url = "http://www.jinglih.com/",
                 MemberName = "17623827239",
                 CreateTime = DateTime.Now,
-                Exception = "测试异常信息", 
+                Exception = "测试异常信息",
             };
 
             //Mssql常规的写法，可以统一
@@ -127,7 +128,7 @@ namespace DMS.EntityFrameworkCore.Service
                 Thread = "测试数据",
                 Url = "http://www.jinglih.com/",
                 MemberName = "17623827239",
-                CreateTime = DateTime.Now, 
+                CreateTime = DateTime.Now,
                 Exception = "测试异常信息"
             };
 
@@ -310,6 +311,16 @@ namespace DMS.EntityFrameworkCore.Service
 
             return result;
         }
+        public async Task<SysJobLog> GetFromSql()
+        {
+            var sql = "SELECT JobLogID FROM dbo.Sys_JobLog WHERE JobLogID=1";
+            SysJobLog sysJobLog = await FromSqlAsync<SysJobLog>(sql);
+             
+            return sysJobLog;
+        }
+
         #endregion
     }
+
+
 }

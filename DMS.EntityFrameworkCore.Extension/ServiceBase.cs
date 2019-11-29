@@ -176,9 +176,25 @@ namespace DMS.EntityFrameworkCore.Extension
         {
             return await _context.Set<T>().FindAsync(keyVaules);
         }
+        public async Task<T> FromSqlAsync<T>(string sql, Expression<Func<T, T>> selctor = null, Expression<Func<T, bool>> predicate = null) where T : class
+        {
+            try
+            {
+                if (predicate != null)
+                {
+                    return await _context.Set<T>().Select(selctor).FromSql(sql).FirstOrDefaultAsync(predicate);
+                }
+                return await _context.Set<T>().FromSql(sql).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         #endregion
 
-        #region 新增实体
+        #region Insert新增实体
         /// <summary>
         /// 添加实体
         /// </summary>
@@ -223,7 +239,7 @@ namespace DMS.EntityFrameworkCore.Extension
         }
         #endregion
 
-        #region 删除实体
+        #region Delete删除实体
         /// <summary>
         /// 删除一个实体
         /// </summary>
@@ -297,7 +313,7 @@ namespace DMS.EntityFrameworkCore.Extension
         }
         #endregion
 
-        #region 修改实体
+        #region Update修改实体
         /// <summary>
         /// 根据实体修改
         /// </summary>
