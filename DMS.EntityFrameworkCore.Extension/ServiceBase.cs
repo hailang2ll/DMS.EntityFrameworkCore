@@ -455,7 +455,7 @@ namespace DMS.EntityFrameworkCore.Extension
         {
             if (_context != null)
             { 
-                //释放资源001
+                //释放资源00
                 _context.Dispose();
             }
         }
