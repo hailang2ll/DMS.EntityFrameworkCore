@@ -108,7 +108,7 @@ namespace DMS.EntityFrameworkCore.Extension
         /// <typeparam name="T"></typeparam>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        public T LastOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class
+        public T LastOrDefault<T>(Expression<Func<T, bool>> predicate = null) where T : class 
         {
             if (predicate != null)
             {
@@ -454,7 +454,8 @@ namespace DMS.EntityFrameworkCore.Extension
         public void Dispose()
         {
             if (_context != null)
-            {
+            { 
+                //释放资源00
                 _context.Dispose();
             }
         }
