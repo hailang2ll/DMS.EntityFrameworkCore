@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>D:\openframe\git-me\DMS.EntityFrameworkCore\DMS.EntityFrameworkCore.Api\DMS.EntityFrameworkCore.Api.xml</DocumentationFile>
+    <DocumentationFile>D:\git\DMS.EntityFrameworkCore\DMS.EntityFrameworkCore.Api\DMS.EntityFrameworkCore.Api.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
