@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Description>基于Microsoft.EntityFrameworkCore.SqlServer框架开发，依赖DMS中基础框架，主要用于EFCore增删改查，以及批量操作，以及复杂的扩展查询</Description>
     <Authors>Dylan,hailang</Authors>
     <Company>Dylan,hailang</Company>
@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <PackageReference Include="DMS.Common" Version="1.2.0" />
+    <PackageReference Include="DMS.NLogs" Version="1.1.0" />
     <PackageReference Include="EFCore.BulkExtensions" Version="2.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
   </ItemGroup>

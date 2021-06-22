@@ -28,8 +28,9 @@ namespace DMS.EntityFrameworkCore.Api.Controllers
         public async Task<IEnumerable<string>> Get()
         {
             //var entity = service.GetEntity(3);
-            var entity = await service.GetFromSql();
-            
+            //var entity = await service.GetFromSql();
+            await service.AddAsync();
+
             return new string[] { "value1", "value2" };
         }
 

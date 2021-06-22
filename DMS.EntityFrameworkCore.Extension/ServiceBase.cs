@@ -12,7 +12,7 @@ namespace DMS.EntityFrameworkCore.Extension
     /// <summary>
     /// 服务基类实现
     /// </summary>
-    public class ServiceBase : IServiceBase
+    public class ServiceBase : IServiceBase, IDisposable
     {
         /// <summary>
         /// 数据库上下文
@@ -447,9 +447,17 @@ namespace DMS.EntityFrameworkCore.Extension
             }
             return await _context.Set<T>().LongCountAsync();
         }
+
+
         #endregion
 
-
+        public void Dispose()
+        {
+            if (_context != null)
+            {
+                _context.Dispose();
+            }
+        }
         /// <summary>
         /// 析构函数
         /// </summary>

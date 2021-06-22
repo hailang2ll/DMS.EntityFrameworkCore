@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using System;
@@ -24,15 +25,17 @@ namespace DMS.EntityFrameworkCore.Api
         /// 
         /// </summary>
         /// <param name="env"></param>
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            var path = env.ContentRootPath;
-            var builder = new ConfigurationBuilder()
-            .SetBasePath(env.ContentRootPath)
-            .AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
-            .AddAppSettingsFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
+            //var path = env.ContentRootPath;
+            //var builder = new ConfigurationBuilder()
+            //.SetBasePath(env.ContentRootPath)
+            //.AddJsonFile($"appsettings.json", optional: false, reloadOnChange: true)
+            //.AddAppSettingsFile($"appsettings.{env.EnvironmentName}.json", optional: true, reloadOnChange: true);
 
-            Configuration = builder.Build();
+            // Configuration = builder.Build();
+
+            Configuration = configuration;
         }
 
         /// <summary>
@@ -50,11 +53,11 @@ namespace DMS.EntityFrameworkCore.Api
 
             services.AddMvc().AddJsonOptions(options =>
             {
-                options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
-                options.SerializerSettings.ContractResolver = new DefaultContractResolver();
-                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
-                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                //options.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+                //options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                //options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                //options.SerializerSettings.MissingMemberHandling = MissingMemberHandling.Ignore;
+                //options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSwaggerGenV2();
@@ -74,25 +77,41 @@ namespace DMS.EntityFrameworkCore.Api
         /// </summary>
         /// <param name="app"></param>
         /// <param name="env"></param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwaggerUIV2();
             }
-
-            var context = app.ApplicationServices.GetService<trydou_sysContext>();
-            var entity = context.SysJobLog.FirstOrDefault();
-            Console.WriteLine($"entity={ entity.Message}");
-
-            app.UseStaticHttpContext();
-            app.UseMvc(routes =>
+            else
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                app.UseExceptionHandler("/Home/Error");
+            }
+            app.UseStaticFiles();
+
+            //var context = app.ApplicationServices.GetService<trydou_sysContext>();
+            //var entity = context.SysJobLog.FirstOrDefault();
+            //Console.WriteLine($"entity={ entity.Message}");
+
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllerRoute(
+                     name: "default",
+                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+
+
+
+          
+           
+
+
         }
 
     }
