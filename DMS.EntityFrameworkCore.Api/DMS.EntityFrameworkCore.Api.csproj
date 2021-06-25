@@ -25,6 +25,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="DMS.EntityFrameworkCore.Api.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="Configs\nlog.config" />
   </ItemGroup>
 
@@ -43,12 +47,6 @@
     <Content Update="Configs\nlog.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="DMS.EntityFrameworkCore.Api.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>
